@@ -1,10 +1,10 @@
 {
 
-  "manifest_version": 2,
-  "name": "hybridge",
-  "version": "0.1",
+    "manifest_version": 2,
+    "name": "hybridge",
+    "version": "0.1",
 
-  "description": "Generic application-browser bridge interface .",
+    "description": "Generic application-browser bridge interface.",
 
     "browser_action": {
         "default_icon": {
@@ -17,10 +17,13 @@
     },
     "content_scripts": [
         {
-            "matches": ["*://localhost/*"],
+            "matches": ["*://localhost/~nastasi/hybridge-chrome/*"],
             "js": ["content.js"]
         }
     ],
+    "externally_connectable": {
+        "matches": ["*://localhost/~nastasi/hybridge-chrome/*"]
+    },
     "permissions": [
         "activeTab"
     ]
