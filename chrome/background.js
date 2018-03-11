@@ -1,4 +1,13 @@
 console.log("background.js: begin");
+
+ws = null;
+
+try {
+    ws = new WebSocket("ws://localhost:8000/websocketserver");
+} catch (err) {
+    console.log('WS connection failed: '+ err.message);
+}
+
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     console.log("inside message !: [" + message.msg + "]");
     sendResponse({'reply': message.msg});
