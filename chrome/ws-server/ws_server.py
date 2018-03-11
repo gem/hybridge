@@ -20,6 +20,20 @@ class MyHomeJS(tornado.web.RequestHandler):
         self.write(home_js)
 
 
+command_page = open('command.html').read()
+command_js = open('command.js').read()
+
+
+class MyCommandPage(tornado.web.RequestHandler):
+    def get(self):
+        self.write(command_page)
+
+
+class MyCommandJS(tornado.web.RequestHandler):
+    def get(self):
+        self.write(command_js)
+
+
 class MyWebSocketServer(tornado.websocket.WebSocketHandler):
     def open(self):
         # metodo eseguito all'apertura della connessione
@@ -40,7 +54,9 @@ class MyWebSocketServer(tornado.websocket.WebSocketHandler):
 application = tornado.web.Application([
     (r'/websocketserver', MyWebSocketServer),
     (r'/index.js', MyHomeJS),
-    (r'/', MyHomePage)
+    (r'/', MyHomePage),
+    (r'/command.html', MyCommandPage),
+    (r'/command.js', MyCommandJS),
 ])
 
 
