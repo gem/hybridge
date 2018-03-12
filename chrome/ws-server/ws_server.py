@@ -4,6 +4,7 @@ import tornado.httpserver
 import tornado.websocket
 import tornado.ioloop
 import tornado.web
+import uuid
 
 
 home_content = open('index.html').read()
@@ -19,6 +20,10 @@ class MyHomeJS(tornado.web.RequestHandler):
     def get(self):
         self.write(home_js)
 
+#
+#  External application simulation
+#
+ws_conns = {}
 
 command_page = open('command.html').read()
 command_js = open('command.js').read()
@@ -36,17 +41,16 @@ class MyCommandJS(tornado.web.RequestHandler):
 
 class MyWebSocketServer(tornado.websocket.WebSocketHandler):
     def open(self):
-        # metodo eseguito all'apertura della connessione
-        print('Nuova connessione')
+        self.id = uuid.uuid4()
+        ws_conns[self.id] = {'id': self.id, 'socket': self}
+        print('New connection')
 
     def on_message(self, message):
-        # metodo eseguito alla ricezione di un messaggio
-        # la stringa 'message' rappresenta il messaggio
-        print('Messaggio ricevuto: %s' % message)
+        print('New message: %s' % message)
 
     def on_close(self):
-        # metodo eseguito alla chiusura della connessione
-        print('Connessione chiusa')
+        ws_conns.remove(self.id)
+        print('Closed connection')
 
     def check_origin(self, origin):
         return True
