@@ -37,6 +37,7 @@ HyBridge.prototype = {
             });
             this.ws.addEventListener('message', function (event) {
                 console.log("WS MESSAGE fired");
+                console.log(event.data);
             });
         }
         catch(err) {

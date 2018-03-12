@@ -6,7 +6,9 @@ import tornado.ioloop
 import tornado.web
 import uuid
 
-
+#
+#  Remote Server emulation
+#
 home_content = open('index.html').read()
 home_js = open('index.js').read()
 
@@ -32,6 +34,21 @@ command_js = open('command.js').read()
 class MyCommandPage(tornado.web.RequestHandler):
     def get(self):
         self.write(command_page)
+
+    def post(self):
+        print("pass from POST")
+        print(self.request.arguments)
+
+        if 'command' in self.request.arguments:
+            command = self.request.arguments['command'][0]
+        if 'arg' in self.request.arguments:
+            args = self.request.arguments['arg']
+
+        for k, v in ws_conns.items():
+            v['socket'].write_message({'command': command, 'args': args})
+
+        # TODO: fix reply
+        self.write("200")
 
 
 class MyCommandJS(tornado.web.RequestHandler):
