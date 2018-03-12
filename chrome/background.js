@@ -1,9 +1,20 @@
 console.log("background.js: begin");
 
+function app_one() {
+    console.log('app_one initialization');
+}
+
+app_one.prototype = {
+    open_window: function() {
+        console.log('app_one::open_window');
+    }
+}
+
 var config = {
     application_url: "localhost:8010/",
     ws_address: "websocketserver",
-    is_secure: false
+    is_secure: false,
+    apps: {'app_one': new app_one()}
 }
 
 var hybridge = null;
@@ -38,6 +49,26 @@ HyBridge.prototype = {
             this.ws.addEventListener('message', function (event) {
                 console.log("WS MESSAGE fired");
                 console.log(event.data);
+                var data = JSON.parse(event.data);
+
+                if (data.app == undefined || data.command == undefined) {
+                    console.log('malformed command, rejected' + data);
+                    return;
+                }
+
+                if (! data.app in config.apps) {
+                    console.log('app ' + data.app + ' not found');
+                    return;
+                }
+
+                app = config.apps[data.app];
+                if (! data.command in app) {
+                    console.log('command '+ data.command + ' not found');
+                    return;
+                }
+
+                app[data.command].apply(app, data.args);
+
             });
         }
         catch(err) {
