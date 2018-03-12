@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import sys
 import tornado.httpserver
 import tornado.websocket
 import tornado.ioloop
@@ -39,13 +40,20 @@ class MyCommandPage(tornado.web.RequestHandler):
         print("pass from POST")
         print(self.request.arguments)
 
+        args = ""
+        if 'app' in self.request.arguments:
+            app = self.request.arguments['app'][0]
         if 'command' in self.request.arguments:
             command = self.request.arguments['command'][0]
         if 'arg' in self.request.arguments:
             args = self.request.arguments['arg']
 
         for k, v in ws_conns.items():
-            v['socket'].write_message({'command': command, 'args': args})
+            msg = {'app': app, 'command': command}
+            if args:
+                msg['args'] = args
+
+            v['socket'].write_message(msg)
 
         # TODO: fix reply
         self.write("200")
@@ -66,23 +74,39 @@ class MyWebSocketServer(tornado.websocket.WebSocketHandler):
         print('New message: %s' % message)
 
     def on_close(self):
-        ws_conns.remove(self.id)
+        if self.id in ws_conns:
+            del ws_conns[self.id]
         print('Closed connection')
 
     def check_origin(self, origin):
         return True
 
-application = tornado.web.Application([
-    (r'/websocketserver', MyWebSocketServer),
-    (r'/index.js', MyHomeJS),
-    (r'/', MyHomePage),
-    (r'/command.html', MyCommandPage),
-    (r'/command.js', MyCommandJS),
-])
 
+def usage(ret):
+    print("Usage:\n  %s <--server|--application>" % sys.argv[0])
+    sys.exit(ret)
 
 if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        usage(1)
+
+    if sys.argv[1] == '--server':
+        application = tornado.web.Application([
+            (r'/websocketserver', MyWebSocketServer),
+            (r'/command.html', MyCommandPage),
+            (r'/command.js', MyCommandJS),
+        ])
+        server_port = 8010
+    elif sys.argv[1] == '--application':
+        application = tornado.web.Application([
+            (r'/index.js', MyHomeJS),
+            (r'/', MyHomePage),
+        ])
+        server_port = 8000
+    else:
+        usage(2)
+
     http_server = tornado.httpserver.HTTPServer(application)
-    http_server.listen(8000)
+    http_server.listen(server_port)
 
     tornado.ioloop.IOLoop.instance().start()

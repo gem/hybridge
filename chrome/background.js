@@ -1,7 +1,7 @@
 console.log("background.js: begin");
 
 var config = {
-    base_url: "localhost:8000/",
+    application_url: "localhost:8010/",
     ws_address: "websocketserver",
     is_secure: false
 }
@@ -10,7 +10,7 @@ var hybridge = null;
 
 function HyBridge(config) {
     this.ws_url = "ws" + (config.is_secure ? "s" : "") + "://" +
-        config.base_url + config.ws_address;
+        config.application_url + config.ws_address;
 }
 
 HyBridge.prototype = {
