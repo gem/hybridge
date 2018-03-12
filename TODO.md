@@ -1,7 +1,9 @@
 # TODO LIST
 
-- background.js: web-socket connection with the server
 - client header modification by add-on
-- separate `configuration.js` from `background.js` using `manifest.json` and create a template
+- WIP separate `configuration.js` from `background.js` using `manifest.json` and create a template
+- web-app web page registration
 - manage multiplicity for each webapp window
 
+DONE - background.js: web-socket connection with the server
+DONE - roundtrip 'command' -> 'background.js'
