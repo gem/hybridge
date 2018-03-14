@@ -1,21 +1,83 @@
 console.log("background.js: begin");
 
-function app_one() {
+function app_one(config) {
     console.log('app_one initialization');
+    console.log(config);
+    this.config = config;
+    this.page = "app_one.html";
 }
 
 app_one.prototype = {
+    win_id: null,
+    win_lck: false,
+    win_lck_del: null,
+    lck_tout: 5000,
+
     open_window: function() {
+        var conf = this.config;
+        var _this = this;
+
         console.log('app_one::open_window');
+
+        if (this.win_lck == false) {
+            this.win_lck = true;
+            console.log("WIN HANDLE: " + this.win_id);
+            if (this.win_id == null) {
+
+                // unlock window after tout millisec
+                _this.win_lck_del = setTimeout(function unlock_win() {
+                    _this.win_lck = false;
+                }, _this.lck_tout);
+
+                console.log(conf);
+                console.log(conf.application_url);
+                var app_url = "http" + (conf.is_secure ? "s" : "") + "://" + conf.server_url + this.page;
+                chrome.windows.create({'url': [app_url], 'width': 800, 'height': 600},
+                                      function window_create_cb(win) {
+                                          _this.win_id = win.id;
+                                          if (_this.win_lck_del != null) {
+                                              clearTimeout(_this.win_lck_del);
+                                              _this.win_lck_del = null;
+                                          }
+                                          _this.win_lck = false;
+                                          _this.on_removed = function window_on_removed_cb(win_id) {
+                                              console.log("onRemoved");
+                                              console.log(_this.win_id);
+                                              console.log(win_id);
+                                              _this.win_lck = true;
+                                              if (_this.win_id == win_id) {
+                                                  console.log("onRemoved: reset window.id");
+                                                  _this.win_id = null;
+                                              }
+                                              chrome.windows.onRemoved.removeListener(
+                                                  _this.on_removed);
+                                              _this.win_lck = false;
+                                          };
+                                          chrome.windows.onRemoved.addListener(_this.on_removed);
+                                      });
+            }
+            else {
+                chrome.windows.update(this.win_id, {focused: true});
+                // TODO put on top
+                console.log('PUT ON TOP HERE');
+                this.win_lck = false;
+            }
+        }
+        else {
+            console.log('WIN LOCK ENABLED, TRY LATER');
+        }
     }
 }
 
 var config = {
     application_url: "localhost:8010/",
+    server_url: "localhost:8000/",
     ws_address: "websocketserver",
     is_secure: false,
-    apps: {'app_one': new app_one()}
 }
+
+config.apps = {'app_one': new app_one(config)};
+
 
 var hybridge = null;
 

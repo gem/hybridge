@@ -12,6 +12,7 @@ import uuid
 #
 home_content = open('index.html').read()
 home_js = open('index.js').read()
+app_one_content = open('app_one.html').read()
 
 
 class MyHomePage(tornado.web.RequestHandler):
@@ -22,6 +23,11 @@ class MyHomePage(tornado.web.RequestHandler):
 class MyHomeJS(tornado.web.RequestHandler):
     def get(self):
         self.write(home_js)
+
+
+class AppOnePage(tornado.web.RequestHandler):
+    def get(self):
+        self.write(app_one_content)
 
 #
 #  External application simulation
@@ -99,6 +105,7 @@ if __name__ == "__main__":
         server_port = 8010
     elif sys.argv[1] == '--application':
         application = tornado.web.Application([
+            (r'/app_one.html', AppOnePage),
             (r'/index.js', MyHomeJS),
             (r'/', MyHomePage),
         ])
