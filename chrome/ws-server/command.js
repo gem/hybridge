@@ -22,7 +22,7 @@ window.onload = function() {
     document.getElementById("app_one").addEventListener(
         "click",
         function() {
-            run_command('app_one', 'open_window');
+            run_command('app_one', 'window_open');
             console.log("Fire a command to command page");
         }
     );

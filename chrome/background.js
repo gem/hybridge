@@ -52,25 +52,19 @@ lock.prototype = {
     }
 }
 
-function app_one(config) {
-    console.log('app_one initialization');
-    console.log(config);
-    this.page = "app_one.html";
-    this.tout = 5000;
+function window_feat(config, page, tout) {
+    this.page = page;
     this.win_id = -1;
     this.win_lock = new lock(this.tout);
     this.config = config;
 }
 
-app_one.prototype = {
-    win_id: -1,
-    win_lock: false,
-
-    open_window: function() {
+window_feat.prototype = {
+    open: function() {
         var conf = this.config;
         var _this = this;
 
-        console.log('app_one::open_window');
+        console.log('window_feat::open');
 
         if (this.win_lock.lock()) {
             console.log("WIN HANDLE: " + this.win_id);
@@ -108,6 +102,19 @@ app_one.prototype = {
         else {
             console.log('WIN LOCK ENABLED, TRY LATER');
         }
+    }
+}
+
+function app_one(config) {
+    console.log('app_one initialization');
+    console.log(config);
+    this.window = new window_feat(config, "app_one.html", 5000);
+    this.config = config;
+}
+
+app_one.prototype = {
+    window_open: function() {
+        this.window.open();
     }
 }
 
