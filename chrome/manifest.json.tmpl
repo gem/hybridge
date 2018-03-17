@@ -12,17 +12,18 @@
         }
     },
     "background": {
-        "scripts": ["background.js"],
-        "persistent": false
+        "scripts": ["background_commons.js", "background_apps.js",
+                    "background.js"],
+        "persistent": true
     },
     "content_scripts": [
         {
-            "matches": ["*://localhost/hybridge-chrome/*"],
+            "matches": ["*://localhost/*"],
             "js": ["content.js"]
         }
     ],
     "externally_connectable": {
-        "matches": ["*://localhost/hybridge-chrome/*"]
+        "matches": ["*://localhost/*"]
     },
     "permissions": [
         "activeTab"
