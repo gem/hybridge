@@ -31,30 +31,6 @@
 
 console.log("background.js: begin");
 
-
-function app_one(config) {
-    console.log('app_one initialization');
-    console.log(config);
-    this.window = new window_feat(config, "app_one.html", 5000);
-    this.config = config;
-}
-
-app_one.prototype = {
-    window_open: function() {
-        this.window.open();
-    }
-}
-
-var config = {
-    application_url: "localhost:8010/",
-    server_url: "localhost:8000/",
-    ws_address: "websocketserver",
-    is_secure: false,
-}
-
-config.apps = {'app_one': new app_one(config)};
-
-
 var hybridge = null;
 
 function HyBridge(config) {
