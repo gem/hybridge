@@ -121,9 +121,9 @@ window_feat.prototype = {
                             if (_this.win_id == win_id) {
                                 console.log("onRemoved: reset window.id");
                                 _this.win_id = -1;
+                                chrome.windows.onRemoved.removeListener(
+                                    _this.on_removed);
                             }
-                            chrome.windows.onRemoved.removeListener(
-                                _this.on_removed);
                             _this.win_lock.unlock()
                         };
                         chrome.windows.onRemoved.addListener(_this.on_removed);
