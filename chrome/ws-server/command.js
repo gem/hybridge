@@ -11,7 +11,7 @@ function run_command(app, command)
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     if (arguments.length > 2) {
         for (var i = 2 ; i < arguments.length ; i++) {
-            args="&arg=" + arguments[i];
+            args += "&arg=" + arguments[i];
         }
     }
     xhr.send("app=" + app + "&command=" + command + args);
@@ -26,6 +26,15 @@ window.onload = function() {
             console.log("Fire a command to command page");
         }
     );
+
+    document.getElementById("app_one_send").addEventListener(
+        "click",
+        function() {
+            run_command('app_one', 'send', 'arg-one', 'arg-two');
+            console.log("Fire a command to command page");
+        }
+    );
+
     document.getElementById("app_two").addEventListener(
         "click",
         function() {
@@ -33,10 +42,25 @@ window.onload = function() {
             console.log("Fire a command to command page");
         }
     );
+    document.getElementById("app_two_send").addEventListener(
+        "click",
+        function() {
+            run_command('app_two', 'send', 'arg-one', 'arg-two');
+            console.log("Fire a command to command page");
+        }
+    );
+
     document.getElementById("app_three").addEventListener(
         "click",
         function() {
             run_command('app_three', 'window_open');
+            console.log("Fire a command to command page");
+        }
+    );
+    document.getElementById("app_three_send").addEventListener(
+        "click",
+        function() {
+            run_command('app_three', 'send', 'arg-one', 'arg-two');
             console.log("Fire a command to command page");
         }
     );

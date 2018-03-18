@@ -47,7 +47,8 @@ app_one.prototype = {
     accept_persist_conn: function(port) {
         console.log('accept_persist');
         var _this = this;
-        port.onMessage.addListener(function(msg) {
+        this.port = port;
+        this.port.onMessage.addListener(function(msg) {
             _this.on_message(msg);
         });
 
@@ -60,6 +61,16 @@ app_one.prototype = {
 
     window_open: function() {
         this.window.open();
+    },
+
+    send: function(a, b) {
+        console.log('received a message from command: A [' + a + '] B [' + b + ']');
+        if (this.port != null) {
+            this.port.postMessage({'a':a, 'b':b});
+        }
+        else {
+            console.log('port not available');
+        }
     }
 }
 

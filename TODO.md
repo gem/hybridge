@@ -3,8 +3,8 @@
 
 # TODO LIST
 
+- WIP command bridged-app -> web-app (use uuid to serialize?)
 - command web-app -> bridged-app (use uuid to serialize?)
-- command bridged-app -> web-app (use uuid to serialize?)
 
 - javascript object web-side infrastructure to manage hybridge commands
 
