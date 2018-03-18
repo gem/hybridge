@@ -45,6 +45,7 @@ lock.prototype = {
         this.lck = true;
         return true;
     },
+
     delayed_unlock: function () {
         if (this.tout) {
             var _this = this;
@@ -57,6 +58,7 @@ lock.prototype = {
             }, this.tout);
         }
     },
+
     lockt: function () {
         if (this.lck) {
             return false;
@@ -72,6 +74,7 @@ lock.prototype = {
         }
         return true;
     },
+
     unlock: function () {
         if (this.lck_del) {
             window.clearTimeout(this.lck_del);
@@ -81,16 +84,19 @@ lock.prototype = {
     }
 }
 
-function window_feat(config, page, tout) {
-    this.page = page;
-    this.win_id = -1;
-    this.win_lock = new lock(this.tout);
-    this.config = config;
+function window_feat(config) {
+    this.gen_conf = config.general;
+    this.config = config.window;
+    this.win_lock = new lock(config.window.tout);
 }
 
 window_feat.prototype = {
+    gen_conf: null,
+    config: null,
+    win_id: -1,
+    win_lock: null,
+
     open: function() {
-        var conf = this.config;
         var _this = this;
 
         console.log('window_feat::open');
@@ -100,26 +106,29 @@ window_feat.prototype = {
             if (this.win_id == -1) {
                 this.win_lock.delayed_unlock();
 
-                var app_url = "http" + (conf.is_secure ? "s" : "") + "://" + conf.server_url + this.page;
-                chrome.windows.create({'url': [app_url], 'width': 800, 'height': 600},
-                                      function window_create_cb(win) {
-                                          _this.win_id = win.id;
-                                          _this.on_removed = function window_on_removed_cb(win_id) {
-                                              console.log("onRemoved");
-                                              console.log(_this.win_id);
-                                              console.log(win_id);
-                                              _this.win_lock.lock()
-                                              if (_this.win_id == win_id) {
-                                                  console.log("onRemoved: reset window.id");
-                                                  _this.win_id = -1;
-                                              }
-                                              chrome.windows.onRemoved.removeListener(
-                                                  _this.on_removed);
-                                              _this.win_lock.unlock()
-                                          };
-                                          chrome.windows.onRemoved.addListener(_this.on_removed);
-                                          _this.win_lock.unlock();
-                                      });
+                var app_url = "http" + (this.gen_conf.is_secure ? "s" : "") +
+                "://" + this.gen_conf.server_url +
+                this.config.page;
+                chrome.windows.create(
+                    {'url': [app_url], 'width': 800, 'height': 600},
+                    function window_create_cb(win) {
+                        _this.win_id = win.id;
+                        _this.on_removed = function window_on_removed_cb(win_id) {
+                            console.log("onRemoved");
+                            console.log(_this.win_id);
+                            console.log(win_id);
+                            _this.win_lock.lock()
+                            if (_this.win_id == win_id) {
+                                console.log("onRemoved: reset window.id");
+                                _this.win_id = -1;
+                            }
+                            chrome.windows.onRemoved.removeListener(
+                                _this.on_removed);
+                            _this.win_lock.unlock()
+                        };
+                        chrome.windows.onRemoved.addListener(_this.on_removed);
+                        _this.win_lock.unlock();
+                    });
             }
             else {
                 chrome.windows.update(this.win_id, {focused: true});

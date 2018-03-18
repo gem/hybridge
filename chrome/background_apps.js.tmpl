@@ -55,7 +55,13 @@ var config = {
     apps: null
 }
 
-config.apps = {'app_one': new app_one(config)};
+var app_one_config = {
+    'general': config,
+    'window': {'page': 'app_one.html',
+               'tout': 5000 }
+};
+
+config.apps = {'app_one': new app_one(app_one_config)};
 
 
 console.log("background_apps.js: end");
