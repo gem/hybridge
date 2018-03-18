@@ -42,6 +42,22 @@ function app_one(config) {
 }
 
 app_one.prototype = {
+    port: null,
+
+    accept_persist_conn: function(port) {
+        console.log('accept_persist');
+        var _this = this;
+        port.onMessage.addListener(function(msg) {
+            _this.on_message(msg);
+        });
+
+        // TODO: on release or how it is called mgmt
+    },
+
+    on_message: function(msg) {
+        console.log('message received by app_one: ' + msg);
+    },
+
     window_open: function() {
         this.window.open();
     }
@@ -55,6 +71,7 @@ function app_two(config) {
 }
 
 app_two.prototype = {
+    port: null,
     window_open: function() {
         this.window.open();
     }
@@ -68,6 +85,7 @@ function app_three(config) {
 }
 
 app_three.prototype = {
+    port: null,
     window_open: function() {
         this.window.open();
     }

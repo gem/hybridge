@@ -121,20 +121,11 @@ function main()
         });
 
     chrome.runtime.onConnectExternal.addListener(function(port) {
-        console.log("first step");
-        console.assert(port.name == "web_page");
-        console.log("second step");
-        port.onMessage.addListener(function(msg) {
-            console.log("port msg received");
-            if (msg.joke == "Knock knock")
-                port.postMessage({question: "Who's there?"});
-            else if (msg.answer == "Madame")
-                port.postMessage({question: "Madame who?"});
-            else if (msg.answer == "Madame... Bovary") {
-                port.postMessage({question: "I don't get it."});
-                console.log("last msg");
-            }
-        });
+        if (config.apps[port.name] !== undefined) {
+            var app = config.apps[port.name];
+
+            app.accept_persist_conn(port);
+        }
     });
 }
 
