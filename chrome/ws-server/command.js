@@ -26,5 +26,19 @@ window.onload = function() {
             console.log("Fire a command to command page");
         }
     );
+    document.getElementById("app_two").addEventListener(
+        "click",
+        function() {
+            run_command('app_two', 'window_open');
+            console.log("Fire a command to command page");
+        }
+    );
+    document.getElementById("app_three").addEventListener(
+        "click",
+        function() {
+            run_command('app_three', 'window_open');
+            console.log("Fire a command to command page");
+        }
+    );
 }
 console.log("command.js: end");

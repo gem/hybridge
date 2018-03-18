@@ -47,6 +47,32 @@ app_one.prototype = {
     }
 }
 
+function app_two(config) {
+    console.log('app_two initialization');
+    console.log(config);
+    this.window = new window_feat(config, "app_two.html", 5000);
+    this.config = config;
+}
+
+app_two.prototype = {
+    window_open: function() {
+        this.window.open();
+    }
+}
+
+function app_three(config) {
+    console.log('app_three initialization');
+    console.log(config);
+    this.window = new window_feat(config, "app_three.html", 5000);
+    this.config = config;
+}
+
+app_three.prototype = {
+    window_open: function() {
+        this.window.open();
+    }
+}
+
 var config = {
     application_url: "localhost:8010/",
     server_url: "localhost:8000/",
@@ -61,7 +87,22 @@ var app_one_config = {
                'tout': 5000 }
 };
 
-config.apps = {'app_one': new app_one(app_one_config)};
+var app_two_config = {
+    'general': config,
+    'window': {'page': 'app_two.html',
+               'tout': 5000 }
+};
+
+var app_three_config = {
+    'general': config,
+    'window': {'page': 'app_three.html',
+               'tout': 5000 }
+};
+
+config.apps = {'app_one': new app_one(app_one_config),
+               'app_two': new app_two(app_two_config),
+               'app_three': new app_three(app_three_config)
+              };
 
 
 console.log("background_apps.js: end");

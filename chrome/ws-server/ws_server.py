@@ -13,6 +13,8 @@ import uuid
 home_content = open('index.html').read()
 home_js = open('index.js').read()
 app_one_content = open('app_one.html').read()
+app_two_content = open('app_two.html').read()
+app_three_content = open('app_three.html').read()
 
 
 class MyHomePage(tornado.web.RequestHandler):
@@ -28,6 +30,14 @@ class MyHomeJS(tornado.web.RequestHandler):
 class AppOnePage(tornado.web.RequestHandler):
     def get(self):
         self.write(app_one_content)
+
+class AppTwoPage(tornado.web.RequestHandler):
+    def get(self):
+        self.write(app_two_content)
+
+class AppThreePage(tornado.web.RequestHandler):
+    def get(self):
+        self.write(app_three_content)
 
 #
 #  External application simulation
@@ -106,6 +116,8 @@ if __name__ == "__main__":
     elif sys.argv[1] == '--application':
         application = tornado.web.Application([
             (r'/app_one.html', AppOnePage),
+            (r'/app_two.html', AppTwoPage),
+            (r'/app_three.html', AppThreePage),
             (r'/index.js', MyHomeJS),
             (r'/', MyHomePage),
         ])
