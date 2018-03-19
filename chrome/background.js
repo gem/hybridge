@@ -36,6 +36,9 @@ var hybridge = null;
 function HyBridge(config) {
     this.ws_url = "ws" + (config.is_secure ? "s" : "") + "://" +
         config.application_url + config.ws_address;
+    for (app in config.apps) {
+        config.apps[app]['hybridge'] = this;
+    }
 }
 
 HyBridge.prototype = {
@@ -99,8 +102,20 @@ HyBridge.prototype = {
         var _this = this;
         this.ws_connect();
 
-        // run watchdog to monitorize websocket
+        // run watchdog
         this.watchdog_hande = setInterval(function wd_func(obj) { obj.watchdog(); }, 1000, _this);
+    },
+    send_to_local_app: function (app, msg) {
+        if (this.ws == null) {
+            console.log('local app not connected');
+            return false;
+        }
+        // if (this.apps[app].port == null) {
+        //     console.log('web app not connected');
+        //     return false;
+        // }
+        var supermsg = {'app': app, 'msg': msg};
+        this.ws.send(JSON.stringify(supermsg));
     }
 }
 

@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 
-import sys
+import sys, os
 import tornado.httpserver
 import tornado.websocket
 import tornado.ioloop
 import tornado.web
 import uuid
+import json
 
 #
 #  Remote Server emulation
@@ -17,6 +18,7 @@ app_one_js = open('app_one.js').read()
 app_two_content = open('app_two.html').read()
 app_three_content = open('app_three.html').read()
 
+apps = {}
 
 class MyHomePage(tornado.web.RequestHandler):
     def get(self):
@@ -33,6 +35,25 @@ class AppOnePage(tornado.web.RequestHandler):
         self.write(app_one_content)
 
 
+class AppOne:
+    def __init__(self):
+        pass
+
+    def ext_app_open(self, *args):
+        print("ext_app_open: begin")
+        print(args)
+        if len(args) != 1:
+            return False
+        print("ext_app_open: 2")
+        if args[0] not in ["small", "medium", "big"]:
+            return False
+
+        print("ext_app_open: 3")
+        cmd = "gnome-mines --%s" % args[0]
+        print("CMD FIRED: [%s]" % cmd)
+        os.system(cmd)
+
+
 class AppOneJS(tornado.web.RequestHandler):
     def get(self):
         self.write(app_one_js)
@@ -41,6 +62,7 @@ class AppOneJS(tornado.web.RequestHandler):
 class AppTwoPage(tornado.web.RequestHandler):
     def get(self):
         self.write(app_two_content)
+
 
 class AppThreePage(tornado.web.RequestHandler):
     def get(self):
@@ -94,7 +116,16 @@ class MyWebSocketServer(tornado.websocket.WebSocketHandler):
         print('New connection')
 
     def on_message(self, message):
-        print('New message: %s' % message)
+        print('\nNew message: %s' % message)
+        supermsg = json.loads(message)
+        print(apps[supermsg['app']])
+        try:
+            meth = getattr(apps[supermsg['app']], supermsg['msg']['command'])
+            meth(*supermsg['msg']['args'])
+            print("WE ARE HERE!")
+        except Exception as e:
+            print("command execution failed %s" % e.message)
+            return False
 
     def on_close(self):
         if self.id in ws_conns:
@@ -114,6 +145,10 @@ if __name__ == "__main__":
         usage(1)
 
     if sys.argv[1] == '--server':
+        app_one = AppOne()
+
+        apps = {'app_one': app_one}
+
         application = tornado.web.Application([
             (r'/websocketserver', MyWebSocketServer),
             (r'/command.html', MyCommandPage),

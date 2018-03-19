@@ -10,5 +10,14 @@ window.onload = function window_onload() {
         console.log("client app_one received:");
         console.log(msg); 
     });
+
+
+    document.getElementById("to-hybridge-btn").addEventListener(
+        "click",
+        function() {
+            var arg = document.getElementById("to-hybridge-txt").value;
+            port.postMessage({'command': 'ext_app_open', 'args': [arg]});
+        }
+    );
 }
 
