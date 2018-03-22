@@ -4,6 +4,8 @@
 # TODO LIST
 
 - WIP command bridged-app -> web-app (use uuid to serialize?)
+  DONE [app.js -> bg.js -> ext_app -> bg.js] - [bg.js->app.js] TODO
+
 - command web-app -> bridged-app (use uuid to serialize?)
 - javascript object web-side infrastructure to manage hybridge commands
 - web app js class initialization (with flag to know if connected or not)

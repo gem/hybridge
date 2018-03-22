@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys, os
+import subprocess
 import tornado.httpserver
 import tornado.websocket
 import tornado.ioloop
@@ -13,12 +14,14 @@ import json
 #
 home_content = open('index.html').read()
 home_js = open('index.js').read()
+uuid_js = open('uuid-random.min.js').read()
 app_one_content = open('app_one.html').read()
 app_one_js = open('app_one.js').read()
 app_two_content = open('app_two.html').read()
 app_three_content = open('app_three.html').read()
 
 apps = {}
+
 
 class MyHomePage(tornado.web.RequestHandler):
     def get(self):
@@ -28,6 +31,11 @@ class MyHomePage(tornado.web.RequestHandler):
 class MyHomeJS(tornado.web.RequestHandler):
     def get(self):
         self.write(home_js)
+
+
+class UuidJS(tornado.web.RequestHandler):
+    def get(self):
+        self.write(uuid_js)
 
 
 class AppOnePage(tornado.web.RequestHandler):
@@ -45,14 +53,12 @@ class AppOne:
         if len(args) != 1:
             return False
         print("ext_app_open: 2")
-        if args[0] not in ["small", "medium", "big"]:
-            return False
 
-        print("ext_app_open: 3")
-        cmd = "gnome-mines --%s" % args[0]
+        cmd = ["xclock", "-geometry", "%sx%s" % (args[0], args[0])]
         print("CMD FIRED: [%s]" % cmd)
-        os.system(cmd)
+        subprocess.Popen(cmd)
 
+        return {'complete': True, 'success': True}
 
 class AppOneJS(tornado.web.RequestHandler):
     def get(self):
@@ -93,11 +99,11 @@ class MyCommandPage(tornado.web.RequestHandler):
         if 'arg' in self.request.arguments:
             args = self.request.arguments['arg']
 
+        msg = {'app': app, 'command': command}
+        if args:
+            msg['args'] = args
+        # broadcast message
         for k, v in ws_conns.items():
-            msg = {'app': app, 'command': command}
-            if args:
-                msg['args'] = args
-
             v['socket'].write_message(msg)
 
         # TODO: fix reply
@@ -120,8 +126,22 @@ class MyWebSocketServer(tornado.websocket.WebSocketHandler):
         supermsg = json.loads(message)
         print(apps[supermsg['app']])
         try:
-            meth = getattr(apps[supermsg['app']], supermsg['msg']['command'])
-            meth(*supermsg['msg']['args'])
+            app_name = supermsg['app']
+            api_msg = supermsg['msg']
+            app_msg = api_msg['msg']
+            command = app_msg['command']
+            args = app_msg['args']
+            app_uuid = api_msg['uuid']
+            meth = getattr(apps[app_name], command)
+
+            # FIXME: manage command exception
+            ret = meth(*args)
+
+            # FIXME: reply just to the proper socket
+            api_msg = {'app': app_name, 'uuid': app_uuid, 'msg': ret}
+            for k, v in ws_conns.items():
+                v['socket'].write_message(api_msg)
+
             print("WE ARE HERE!")
         except Exception as e:
             print("command execution failed %s" % e.message)
@@ -157,6 +177,7 @@ if __name__ == "__main__":
         server_port = 8010
     elif sys.argv[1] == '--application':
         application = tornado.web.Application([
+            (r'/uuid-random.min.js', UuidJS),
             (r'/app_one.html', AppOnePage),
             (r'/app_one.js', AppOneJS),
             (r'/app_two.html', AppTwoPage),
