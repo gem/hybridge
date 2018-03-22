@@ -67,9 +67,10 @@ function on_message_cb(msg) {
         console.log(msg);
     }
 
-function on_cmd_cb(msg)
+function on_cmd_cb(uu, msg)
 {
     console.log('MSG rec: ');
+    console.log(uu);
     console.log(msg);
 }
 
@@ -82,7 +83,7 @@ window.onload = function window_onload() {
             console.log('send msg');
             var arg = document.getElementById("to-hybridge-txt").value;
             var uu = hb.send({'command': 'ext_app_open', 'args': [arg]},
-                               on_cmd_cb);
+                             on_cmd_cb);
             console.log("FIRED CMD WITH UUID: " + uu);
         }
     );
