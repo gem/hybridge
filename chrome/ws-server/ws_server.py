@@ -138,9 +138,10 @@ class MyWebSocketServer(tornado.websocket.WebSocketHandler):
             ret = meth(*args)
 
             # FIXME: reply just to the proper socket
-            api_msg = {'app': app_name, 'uuid': app_uuid, 'msg': ret}
+            hyb_msg = {'app': app_name, 'msg': {
+                'uuid': app_uuid, 'reply': ret}}
             for k, v in ws_conns.items():
-                v['socket'].write_message(api_msg)
+                v['socket'].write_message(hyb_msg)
 
             print("WE ARE HERE!")
         except Exception as e:

@@ -110,7 +110,7 @@ window_feat.prototype = {
                 "://" + this.gen_conf.server_url +
                 this.config.page;
                 chrome.windows.create(
-                    {'url': [app_url], 'width': 800, 'height': 600},
+                    {'url': [app_url], 'width': 800, 'height': 1200},
                     function window_create_cb(win) {
                         _this.win_id = win.id;
                         _this.on_removed = function window_on_removed_cb(win_id) {

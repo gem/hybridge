@@ -44,7 +44,7 @@ function HyBridge(config) {
 HyBridge.prototype = {
     ws_url: "",
     ws: null,
-    watchdog_hande: null,
+    watchdog_handle: null,
     ws_connect: function() {
         var _this = this;
 
@@ -63,30 +63,7 @@ HyBridge.prototype = {
                 this.close();
                 _this.ws = null;
             });
-            this.ws.addEventListener('message', function (event) {
-                console.log("WS MESSAGE fired");
-                console.log(event.data);
-                var data = JSON.parse(event.data);
-
-                if (data.app == undefined || data.command == undefined) {
-                    console.log('malformed command, rejected' + data);
-                    return;
-                }
-
-                if (! data.app in config.apps) {
-                    console.log('app ' + data.app + ' not found');
-                    return;
-                }
-
-                app = config.apps[data.app];
-                if (! data.command in app) {
-                    console.log('command '+ data.command + ' not found');
-                    return;
-                }
-
-                app[data.command].apply(app, data.args);
-
-            });
+            this.ws.addEventListener('message', this.ws_message_cb);
         }
         catch(err) {
             console.log('WS connection failed: '+ err.message);
@@ -103,7 +80,7 @@ HyBridge.prototype = {
         this.ws_connect();
 
         // run watchdog
-        this.watchdog_hande = setInterval(function wd_func(obj) { obj.watchdog(); }, 1000, _this);
+        this.watchdog_handle = setInterval(function wd_func(obj) { obj.watchdog(); }, 1000, _this);
     },
     send_to_local_app: function (app, msg) {
         if (this.ws == null) {
@@ -116,6 +93,42 @@ HyBridge.prototype = {
         // }
         var supermsg = {'app': app, 'msg': msg};
         this.ws.send(JSON.stringify(supermsg));
+    },
+
+    ws_message_cb: function (event) {
+        console.log("WS2 MESSAGE fired");
+        console.log(event.data);
+        var hyb_msg = JSON.parse(event.data);
+
+        if (hyb_msg.app == undefined)
+            return;
+
+        if ('msg' in hyb_msg && 'reply' in hyb_msg['msg']) {
+            var api_msg = hyb_msg['msg'];
+
+            app = config.apps[hyb_msg.app];
+            app.send(api_msg);
+
+            return;
+        }
+
+        if (hyb_msg.command == undefined) {
+            console.log('malformed command, rejected' + hyb_msg);
+            return;
+        }
+
+        if (! hyb_msg.app in config.apps) {
+            console.log('app ' + hyb_msg.app + ' not found');
+            return;
+        }
+
+        app = config.apps[hyb_msg.app];
+        if (! hyb_msg.command in app) {
+            console.log('command '+ hyb_msg.command + ' not found');
+            return;
+        }
+
+        app[hyb_msg.command].apply(app, hyb_msg.args);
     }
 }
 

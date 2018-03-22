@@ -68,10 +68,11 @@ app_one.prototype = {
         this.window.open();
     },
 
-    send: function(a, b) {
-        console.log('received a message from command: A [' + a + '] B [' + b + ']');
+    send: function(msg) {
+        console.log('App one: received msg');
+        console.log(msg);
         if (this.port != null) {
-            this.port.postMessage({'a':a, 'b':b});
+            this.port.postMessage(msg);
         }
         else {
             console.log('port not available');

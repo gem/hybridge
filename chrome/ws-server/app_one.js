@@ -15,25 +15,31 @@ HyBridge.prototype = {
     pending: {},
 
     connect: function() {
+        var _this = this;
         if (this.port != null) {
             // FIXME close previous
         }
         this.port = chrome.runtime.connect(
             this.hybridge_id, {name: "app_one"});
-        this.port.onMessage.addListener(this.receive_cb);
+        this.port.onMessage.addListener(function(msg) { return _this.receive_cb(msg)});
     },
 
     receive_cb: function(api_msg) {
+        console.log("receive_cb");
+        console.log(api_msg);
         if ('uuid' in api_msg && api_msg['uuid'] in this.pending &&
-            'msg' in api_msg && 'complete' in api_msg['msg']) {
+            'reply' in api_msg && 'complete' in api_msg['reply']) {
             // reply from a command
 
+            console.log('Reply received!');
             var uu = api_msg['uuid'];
-            var msg = api_msg['msg'];
+            var reply = api_msg['reply'];
             if (this.pending[uu].cb) {
-                this.pending[uu].cb(uu, msg);
+                console.log('reply cb fired!');
+                this.pending[uu].cb(uu, reply);
             }
-            if (msg['complete']) {
+            if (reply['complete']) {
+                console.log('pending removed!');
                 delete this.pending[uu];
             }
         }
@@ -57,9 +63,6 @@ HyBridge.prototype = {
 }
 
 function on_message_cb(msg) {
-        document.getElementById("arg-a").innerHTML = msg.a;
-        document.getElementById("arg-b").innerHTML = msg.b;
-
         console.log("client app_one received:");
         console.log(msg);
     }
