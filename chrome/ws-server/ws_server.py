@@ -23,12 +23,12 @@ app_three_content = open('app_three.html').read()
 apps = {}
 
 
-class MyHomePage(tornado.web.RequestHandler):
+class HomePage(tornado.web.RequestHandler):
     def get(self):
         self.write(home_content)
 
 
-class MyHomeJS(tornado.web.RequestHandler):
+class HomeJS(tornado.web.RequestHandler):
     def get(self):
         self.write(home_js)
 
@@ -83,7 +83,7 @@ command_page = open('command.html').read()
 command_js = open('command.js').read()
 
 
-class MyCommandPage(tornado.web.RequestHandler):
+class CommandPage(tornado.web.RequestHandler):
     def get(self):
         self.write(command_page)
 
@@ -110,12 +110,12 @@ class MyCommandPage(tornado.web.RequestHandler):
         self.write("200")
 
 
-class MyCommandJS(tornado.web.RequestHandler):
+class CommandJS(tornado.web.RequestHandler):
     def get(self):
         self.write(command_js)
 
 
-class MyWebSocketServer(tornado.websocket.WebSocketHandler):
+class WebSocketServer(tornado.websocket.WebSocketHandler):
     def open(self):
         self.id = uuid.uuid4()
         ws_conns[self.id] = {'id': self.id, 'socket': self}
@@ -171,9 +171,9 @@ if __name__ == "__main__":
         apps = {'app_one': app_one}
 
         application = tornado.web.Application([
-            (r'/websocketserver', MyWebSocketServer),
-            (r'/command.html', MyCommandPage),
-            (r'/command.js', MyCommandJS),
+            (r'/websocketserver', WebSocketServer),
+            (r'/command.html', CommandPage),
+            (r'/command.js', CommandJS),
         ])
         server_port = 8010
     elif sys.argv[1] == '--application':
@@ -183,8 +183,8 @@ if __name__ == "__main__":
             (r'/app_one.js', AppOneJS),
             (r'/app_two.html', AppTwoPage),
             (r'/app_three.html', AppThreePage),
-            (r'/index.js', MyHomeJS),
-            (r'/', MyHomePage),
+            (r'/index.js', HomeJS),
+            (r'/', HomePage),
         ])
         server_port = 8000
     else:
