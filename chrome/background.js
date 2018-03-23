@@ -94,7 +94,9 @@ HyBridge.prototype = {
         var supermsg = {'app': app, 'msg': msg};
         this.ws.send(JSON.stringify(supermsg));
     },
-
+    // hyb_msg = {'app':<app_name> , 'msg':<api_msg>}
+    // api_msg = {'msg'|'reply': <app_msg>, 'uuid'}
+    // app_msg = {'command', 'args':[], complete: <True|False>}
     ws_message_cb: function (event) {
         console.log("WS2 MESSAGE fired");
         console.log(event.data);
@@ -103,15 +105,18 @@ HyBridge.prototype = {
         if (hyb_msg.app == undefined)
             return;
 
-        if ('msg' in hyb_msg && 'reply' in hyb_msg['msg']) {
+        app = config.apps[hyb_msg.app];
+
+        if ('msg' in hyb_msg &&
+            ('msg' in hyb_msg['msg'] || 'reply' in hyb_msg['msg'])) {
             var api_msg = hyb_msg['msg'];
 
-            app = config.apps[hyb_msg.app];
-            app.send(api_msg);
+            app.on_bg_message(api_msg);
 
             return;
         }
-
+        console.log('OUT OF CORRECT SCOPE!!!!!!');
+        return;
         if (hyb_msg.command == undefined) {
             console.log('malformed command, rejected' + hyb_msg);
             return;
