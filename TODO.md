@@ -2,18 +2,17 @@
 - manage ssl certificates with application
 
 # TODO LIST
-
-- WIP command bridged-app -> web-app (use uuid to serialize?)
-  . web-app command
-    DONE [app.js  -> bg(app).js -> bg.js -> ext_app -> bg.js -> bg(app).js -> app.js]
-  . ext-app command
-    TODO [ext_app -> bg.js -> bg(app).js -> app.js -> bg(app).js -> bg.js -> ext_app]
-
-- command web-app -> bridged-app (use uuid to serialize?)
-- javascript object web-side infrastructure to manage hybridge commands
-- web app js class initialization (with flag to know if connected or not)
-
+. web-api: hide HyBridge behind App class
+- web-api with a flag to inform about connection status
 - client header modification by add-on: see https://developer.chrome.com/extensions/webRequest
+
+- manage and test disconnections (both sides)
+
+DONE - ext-app <-> web-app (add-on part)
+DONE - ext-app <-> web-app (web-page part)
+DONE - web-app <-> ext-app (ext-part)
+
+DONE - javascript object web-side infrastructure to manage hybridge commands
 
 DONE - manage multiplicity for each webapp window
 DONE - separate `configuration.js` from `background.js` using `manifest.json` and create a template

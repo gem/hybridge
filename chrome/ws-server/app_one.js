@@ -1,72 +1,41 @@
-var hybridge_id = "cjgpdcodlpoonjhgljcikndlgodgpdfb";
-var port = null;
+/**
+ *
+ * @source: hybridge (chrome) app_one.js
+ * @author: Matteo Nastasi <nastasi@alternativeoutout.it>
+ * @link: https://github.com/nastasi/hybridge
+ *
+ * @licstart  The following is the entire license notice for the
+ *  JavaScript code in this page.
+ *
+ * Copyright (C) 2018 Matteo Nastasi
+ *
+ *
+ * The JavaScript code in this page is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU
+ * General Public License (GNU GPL) as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option)
+ * any later version.  The code is distributed WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+ *
+ * As additional permission under GNU GPL version 3 section 7, you
+ * may distribute non-source (e.g., minimized or compacted) forms of
+ * that code without the copy of the GNU GPL normally required by
+ * section 4, provided you include this license notice and a URL
+ * through which recipients can access the Corresponding Source.
+ *
+ * @licend  The above is the entire license notice
+ * for the JavaScript code in this page.
+ *
+ */
 
-function HyBridge(app_name, on_msg_cb)
-{
-    this.name = app_name;
-    this.on_msg_cb = on_msg_cb;
-    this.connect();
-}
-
-HyBridge.prototype = {
-    hybridge_id: "cjgpdcodlpoonjhgljcikndlgodgpdfb",
-    name: null,
-    port: null,
-    pending: {},
-
-    connect: function() {
-        var _this = this;
-        if (this.port != null) {
-            // FIXME close previous
-        }
-        this.port = chrome.runtime.connect(
-            this.hybridge_id, {name: "app_one"});
-        this.port.onMessage.addListener(function(msg) { return _this.receive_cb(msg)});
-    },
-
-    receive_cb: function(api_msg) {
-        console.log("receive_cb");
-        console.log(api_msg);
-        if ('uuid' in api_msg && api_msg['uuid'] in this.pending &&
-            'reply' in api_msg && 'complete' in api_msg['reply']) {
-            // reply from a command
-
-            console.log('Reply received!');
-            var uu = api_msg['uuid'];
-            var reply = api_msg['reply'];
-            if (this.pending[uu].cb) {
-                console.log('reply cb fired!');
-                this.pending[uu].cb(uu, reply);
-            }
-            if (reply['complete']) {
-                console.log('pending removed!');
-                delete this.pending[uu];
-            }
-        }
-        else {
-            // not a reply or malformed msg, use user defined cb
-            this.on_msg_cb(api_msg);
-        }
-    },
-
-    // { 'msg': {'command', 'args', [ ]}, uuid: <UUID> }
-    send: function(msg, on_reply_cb) {
-        var uu = uuid();
-        var api_msg = { 'msg': msg,
-                        'uuid': uu
-                        // maybe the time
-                      };
-        this.port.postMessage(api_msg);
-        this.pending[uu] = { 'msg': api_msg, 'cb': on_reply_cb };
-        return uu;
-    }
-}
-
-function on_message_cb(msg) {
+/* this function is called when a malformed message is received */
+function on_strange_message_cb(msg) {
         console.log("client app_one received:");
         console.log(msg);
     }
 
+/* callback fired when when a web-app generated command is finished */ 
 function on_cmd_cb(uu, msg)
 {
     console.log('MSG rec: ');
@@ -74,15 +43,39 @@ function on_cmd_cb(uu, msg)
     console.log(msg);
 }
 
+
+function AppOne(name)
+{
+    this.name = name;
+}
+
+AppOne.prototype = {
+    name: null,
+    hybridge: null,
+    allowed_meths: ['set_cells'],
+
+    register: function (hybridge) {
+        self.hybridge = hybridge;
+    },
+
+    set_cells: function(arg_a, arg_b) {
+        document.getElementById("arg-a").innerHTML = arg_a;
+        document.getElementById("arg-b").innerHTML = arg_b;
+
+        return {'success': true};
+    }
+}
+
 window.onload = function window_onload() {
-    hb = new HyBridge("app_one", on_message_cb);
+    var app_one = new AppOne('app_one');
+    var hyb = new HyBridge(app_one, on_strange_message_cb);
 
     document.getElementById("to-hybridge-btn").addEventListener(
         "click",
         function() {
             console.log('send msg');
             var arg = document.getElementById("to-hybridge-txt").value;
-            var uu = hb.send({'command': 'ext_app_open', 'args': [arg]},
+            var uu = hyb.send({'command': 'ext_app_open', 'args': [arg]},
                              on_cmd_cb);
             console.log("FIRED CMD WITH UUID: " + uu);
         }

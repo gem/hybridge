@@ -16,6 +16,7 @@ home_content = open('index.html').read()
 home_js = open('index.js').read()
 uuid_js = open('uuid-random.min.js').read()
 app_one_content = open('app_one.html').read()
+hybridge_js = open('hybridge.js').read()
 app_one_js = open('app_one.js').read()
 app_two_content = open('app_two.html').read()
 app_three_content = open('app_three.html').read()
@@ -46,7 +47,7 @@ class AppOnePage(tornado.web.RequestHandler):
 class AppOne:
     def __init__(self):
         self.name = 'app_one'
-        self.allowed_apps = ['ext_app_open']
+        self.allowed_meths = ['ext_app_open']
         self.pending = {}
 
     def ext_app_open(self, *args):
@@ -87,7 +88,7 @@ class AppOne:
         else:
             app_msg = api_msg['msg']
             command = app_msg['command']
-            if command not in self.allowed_apps:
+            if command not in self.allowed_meths:
                 api_reply = {'uuid': api_uuid, 'reply': {
                     'success': False, 'msg': 'method not found'}}
                 self.send(api_reply)
@@ -105,6 +106,11 @@ class AppOne:
 class AppOneJS(tornado.web.RequestHandler):
     def get(self):
         self.write(app_one_js)
+
+
+class HyBridgeJS(tornado.web.RequestHandler):
+    def get(self):
+        self.write(hybridge_js)
 
 
 class AppTwoPage(tornado.web.RequestHandler):
@@ -221,6 +227,7 @@ if __name__ == "__main__":
     elif sys.argv[1] == '--application':
         application = tornado.web.Application([
             (r'/uuid-random.min.js', UuidJS),
+            (r'/hybridge.js', HyBridgeJS),
             (r'/app_one.html', AppOnePage),
             (r'/app_one.js', AppOneJS),
             (r'/app_two.html', AppTwoPage),

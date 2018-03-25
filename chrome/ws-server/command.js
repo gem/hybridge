@@ -30,7 +30,7 @@ window.onload = function() {
     document.getElementById("app_one_send").addEventListener(
         "click",
         function() {
-            run_command('app_one', 'send', 'arg-one', 'arg-two');
+            run_command('app_one', 'set_cells', 'arg-one', 'arg-two');
             console.log("Fire a command to command page");
         }
     );
