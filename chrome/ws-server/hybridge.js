@@ -41,6 +41,7 @@ function HyBridge(app, on_msg_cb)
 
 HyBridge.prototype = {
     hybridge_id: "cjgpdcodlpoonjhgljcikndlgodgpdfb",
+    app: null,
     name: null,
     port: null,
     pending: {},

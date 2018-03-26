@@ -43,9 +43,15 @@ function app_one(config) {
 }
 
 app_one.prototype = {
+    hybridge: null,
     app_name: null,
     port: null,
+    cmds: ["hybridge_track_status"],
     bg_cmds: ["window_open"],
+
+    register: function(hybridge) {
+        this.hybridge = hybridge;
+    },
 
     accept_persist_conn: function(port) {
         console.log('accept_persist');
@@ -111,6 +117,11 @@ function app_two(config) {
 
 app_two.prototype = {
     port: null,
+
+    register: function(hybridge) {
+        this.hybridge = hybridge;
+    },
+
     window_open: function() {
         this.window.open();
     }
@@ -125,6 +136,11 @@ function app_three(config) {
 
 app_three.prototype = {
     port: null,
+
+    register: function(hybridge) {
+        this.hybridge = hybridge;
+    },
+
     window_open: function() {
         this.window.open();
     }

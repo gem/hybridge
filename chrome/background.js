@@ -37,11 +37,13 @@ function HyBridge(config) {
     this.ws_url = "ws" + (config.is_secure ? "s" : "") + "://" +
         config.application_url + config.ws_address;
     for (app in config.apps) {
-        config.apps[app]['hybridge'] = this;
+        config.apps[app].register(this);
+        this.apps[app] = config.apps[app];
     }
 }
 
 HyBridge.prototype = {
+    apps: {},
     ws_url: "",
     ws: null,
     watchdog_handle: null,
