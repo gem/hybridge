@@ -105,8 +105,8 @@ HyBridge.prototype = {
         }
         else {
             // not a reply or malformed msg, use user defined cb
-            if (this.on_msg_cb) {
-                this.on_msg_cb(api_msg);
+            if ('on_notstd_msg_cb' in this.app) {
+                this.app.on_notstd_msg_cb(api_msg);
             }
         }
     },

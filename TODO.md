@@ -2,11 +2,13 @@
 - manage ssl certificates with application
 
 # TODO LIST
-. web-api: hide HyBridge behind App class
 - web-api with a flag to inform about connection status
+- update messages documentation
 - client header modification by add-on: see https://developer.chrome.com/extensions/webRequest
 
 - manage and test disconnections (both sides)
+
+DONE - web-api: hide HyBridge behind App class
 
 DONE - ext-app <-> web-app (add-on part)
 DONE - ext-app <-> web-app (web-page part)

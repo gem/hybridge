@@ -29,13 +29,7 @@
  *
  */
 
-/* this function is called when a malformed message is received */
-function on_strange_message_cb(msg) {
-        console.log("client app_one received:");
-        console.log(msg);
-    }
-
-/* callback fired when when a web-app generated command is finished */ 
+/* callback fired when when a web-app generated command is finished */
 function on_cmd_cb(uu, msg)
 {
     console.log('MSG rec: ');
@@ -47,6 +41,7 @@ function on_cmd_cb(uu, msg)
 function AppOne(name)
 {
     this.name = name;
+    this.hybridge = new HyBridge(this);
 }
 
 AppOne.prototype = {
@@ -58,25 +53,34 @@ AppOne.prototype = {
         self.hybridge = hybridge;
     },
 
+    /* this function is called when a malformed message is received */
+    on_notstd_msg_cb: function(msg) {
+        console.log("client app_one received:");
+        console.log(msg);
+    },
+
     set_cells: function(arg_a, arg_b) {
         document.getElementById("arg-a").innerHTML = arg_a;
         document.getElementById("arg-b").innerHTML = arg_b;
 
         return {'success': true};
+    },
+
+    send: function(msg, cmd_cb) {
+        return this.hybridge.send(msg, cmd_cb);
     }
 }
 
 window.onload = function window_onload() {
     var app_one = new AppOne('app_one');
-    var hyb = new HyBridge(app_one, on_strange_message_cb);
 
     document.getElementById("to-hybridge-btn").addEventListener(
         "click",
         function() {
             console.log('send msg');
             var arg = document.getElementById("to-hybridge-txt").value;
-            var uu = hyb.send({'command': 'ext_app_open', 'args': [arg]},
-                             on_cmd_cb);
+            var uu = app_one.send({'command': 'ext_app_open', 'args': [arg]},
+                                  on_cmd_cb);
             console.log("FIRED CMD WITH UUID: " + uu);
         }
     );
