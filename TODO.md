@@ -3,6 +3,19 @@
 
 # TODO LIST
 - web-api with a flag to inform about connection status
+  . web-api new command that do:
+      . submit a cb to start and to stop connection to ext_app
+      . submit a cb to remove start/stop cb when web_app disconnect
+      . run explicitly the callback to reply the current status
+
+- ext-api with a flag to inform about connection status
+  . ext-api new command that do:
+      . ext-bg retrieve command setting current status to unknown
+      . submit a cb to start and to stop connection to web_app
+      . submit a cb to remove start/stop cb when ext_app disconnect
+      . run explicitly the callback to reply the current status
+
+
 - update messages documentation
 - client header modification by add-on: see https://developer.chrome.com/extensions/webRequest
 

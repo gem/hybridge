@@ -37,8 +37,8 @@ function HyBridge(config) {
     this.ws_url = "ws" + (config.is_secure ? "s" : "") + "://" +
         config.application_url + config.ws_address;
     for (app in config.apps) {
-        config.apps[app].register(this);
         this.apps[app] = config.apps[app];
+        config.apps[app].register(this);
     }
 }
 
@@ -54,10 +54,20 @@ HyBridge.prototype = {
         try {
             this.ws = new WebSocket(this.ws_url);
             this.ws.addEventListener('open', function (event) {
+                for (var app in this.apps) {
+                    if ('on_hybridge_status' in app) {
+                        app.on_hybridge_status(true);
+                    }
+                }
                 console.log("WS OPEN fired");
             });
             this.ws.addEventListener('close', function (event) {
                 console.log("WS CLOSE fired");
+                for (var app in this.apps) {
+                    if ('on_hybridge_status' in app) {
+                        app.on_hybridge_status(false);
+                    }
+                }
                 _this.ws = null;
             });
             this.ws.addEventListener('error', function (event) {
@@ -65,7 +75,7 @@ HyBridge.prototype = {
                 this.close();
                 _this.ws = null;
             });
-            this.ws.addEventListener('message', this.ws_message_cb);
+            this.ws.addEventListener('message', this.ws_receive_gen());
         }
         catch(err) {
             console.log('WS connection failed: '+ err.message);
@@ -84,7 +94,7 @@ HyBridge.prototype = {
         // run watchdog
         this.watchdog_handle = setInterval(function wd_func(obj) { obj.watchdog(); }, 1000, _this);
     },
-    send_to_local_app: function (app, msg) {
+    ws_send: function (app, msg) {
         if (this.ws == null) {
             console.log('local app not connected');
             return false;
@@ -99,43 +109,47 @@ HyBridge.prototype = {
     // hyb_msg = {'app':<app_name> , 'msg':<api_msg>}
     // api_msg = {'msg'|'reply': <app_msg>, 'uuid'}
     // app_msg = {'command', 'args':[], complete: <True|False>}
-    ws_message_cb: function (event) {
-        console.log("WS2 MESSAGE fired");
-        console.log(event.data);
-        var hyb_msg = JSON.parse(event.data);
+    ws_receive_gen: function () {
+        var _this = this;
+        function ws_receive(event) {
+            console.log("WS2 MESSAGE fired");
+            console.log(event.data);
+            var hyb_msg = JSON.parse(event.data);
 
-        if (hyb_msg.app == undefined)
+            if (hyb_msg.app == undefined)
+                return;
+
+            app = _this.apps[hyb_msg.app];
+
+            if ('msg' in hyb_msg &&
+                ('msg' in hyb_msg['msg'] || 'reply' in hyb_msg['msg'])) {
+                var api_msg = hyb_msg['msg'];
+
+                app.ws_receive(api_msg);
+
+                return;
+            }
+            console.log('OUT OF CORRECT SCOPE!!!!!!');
             return;
+            if (hyb_msg.command == undefined) {
+                console.log('malformed command, rejected' + hyb_msg);
+                return;
+            }
 
-        app = config.apps[hyb_msg.app];
+            if (!hyb_msg.app in config.apps) {
+                console.log('app ' + hyb_msg.app + ' not found');
+                return;
+            }
 
-        if ('msg' in hyb_msg &&
-            ('msg' in hyb_msg['msg'] || 'reply' in hyb_msg['msg'])) {
-            var api_msg = hyb_msg['msg'];
+            app = config.apps[hyb_msg.app];
+            if (!hyb_msg.command in app) {
+                console.log('command '+ hyb_msg.command + ' not found');
+                return;
+            }
 
-            app.on_bg_message(api_msg);
-
-            return;
+            app[hyb_msg.command].apply(app, hyb_msg.args);
         }
-        console.log('OUT OF CORRECT SCOPE!!!!!!');
-        return;
-        if (hyb_msg.command == undefined) {
-            console.log('malformed command, rejected' + hyb_msg);
-            return;
-        }
-
-        if (! hyb_msg.app in config.apps) {
-            console.log('app ' + hyb_msg.app + ' not found');
-            return;
-        }
-
-        app = config.apps[hyb_msg.app];
-        if (! hyb_msg.command in app) {
-            console.log('command '+ hyb_msg.command + ' not found');
-            return;
-        }
-
-        app[hyb_msg.command].apply(app, hyb_msg.args);
+        return ws_receive;
     }
 }
 

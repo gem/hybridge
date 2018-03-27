@@ -57,26 +57,36 @@ app_one.prototype = {
         console.log('accept_persist');
         var _this = this;
         this.port = port;
-        this.port.onMessage.addListener(function(msg) {
-            _this.on_message(msg);
-        });
+        this.port.onMessage.addListener(
+            function(msg) { return _this.receive(msg); });
 
         // TODO: on release or how it is called mgmt
     },
 
-    on_message: function(msg) {
+    // on message from web-app
+    receive: function(api_msg) {
         console.log('message received by app_one:');
-        console.log(msg);
+        console.log(api_msg);
 
-        this.hybridge.send_to_local_app(this.app_name, msg);
+        if ('msg' in api_msg) {
+            var app_msg = api_msg.msg;
+            if ('command' in app_msg &&
+                this.cmds.indexOf(app_msg.command) != -1) {
+                var args = [];
+                if ('args' in app_msg) {
+                    args = app_msg.args;
+                }
+                var ret = this[app_msg.command].apply(this, args);
+                // var api_reply = {'reply': ret, 'complete': false, 'uuid': api_msg.uuid};
+
+                // this.port.postMessage(api_reply);
+                return;
+            }
+        }
+        this.hybridge.ws_send(this.app_name, api_msg);
     },
 
-    window_open: function() {
-        this.window.open();
-        return {'complete': true, 'success': true};
-    },
-
-    on_bg_message: function(api_msg) {
+    ws_receive: function(api_msg) {
         console.log('on_bg_message');
         console.log(api_msg);
         if ('msg' in api_msg && 'command' in api_msg.msg) {
@@ -92,7 +102,7 @@ app_one.prototype = {
                 }
                 var ret = this[app_msg.command].apply(this, args);
                 var api_reply = {'reply': ret, 'uuid': api_msg.uuid};
-                this.hybridge.send_to_local_app(this.app_name, api_reply);
+                this.hybridge.ws_send(this.app_name, api_reply);
 
                 return;
             }
@@ -105,6 +115,16 @@ app_one.prototype = {
         else {
             console.log('port not available');
         }
+    },
+
+    window_open: function() {
+        this.window.open();
+        return {'complete': true, 'success': true};
+    },
+
+    hybridge_track_status: function() {
+        // set something in the bg main to manage the tracking
+        console.log('hybridge_track_status FIRED!');
     }
 }
 

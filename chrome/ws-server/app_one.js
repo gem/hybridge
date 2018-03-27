@@ -42,15 +42,29 @@ function AppOne(name)
 {
     this.name = name;
     this.hybridge = new HyBridge(this);
+
+    // TODO: add to hybridge push pop of things to do on ext_app connect/disconnect
+
+    console.log('before');
+    this.track_uuid = this.hybridge.send(
+        {'command': 'hybridge_track_status'},
+        function (uuid, msg) { console.log('track status');
+                               console.log(msg);
+                             });
+    // bg-side it register cb in on_open, on_close and fire back the current
+    // connection status
+
+    console.log('after');
 }
 
 AppOne.prototype = {
     name: null,
     hybridge: null,
+    track_uuid: null,
     allowed_meths: ['set_cells'],
 
     register: function (hybridge) {
-        self.hybridge = hybridge;
+        this.hybridge = hybridge;
     },
 
     /* this function is called when a malformed message is received */

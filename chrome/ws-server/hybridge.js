@@ -46,6 +46,7 @@ HyBridge.prototype = {
     port: null,
     pending: {},
 
+    // connect to hybridge
     connect: function() {
         var _this = this;
         if (this.port != null) {
@@ -56,14 +57,15 @@ HyBridge.prototype = {
         this.port.onMessage.addListener(function(msg) { return _this.receive(msg)});
     },
 
+    // receive from hybridge
     receive: function(api_msg) {
         console.log("receive");
         console.log(api_msg);
         if ('uuid' in api_msg) {
-            if( api_msg['uuid'] in this.pending &&
+            if (api_msg['uuid'] in this.pending &&
                 'reply' in api_msg) {
 
-            // reply from a command
+                // reply from a command
 
                 console.log('Reply received!');
                 var uu = api_msg['uuid'];
@@ -112,8 +114,10 @@ HyBridge.prototype = {
         }
     },
 
+    // send to hybridge
     // { 'msg': {'command', 'args', [ ]}, uuid: <UUID> }
     send: function(msg, on_reply_cb) {
+        console.log('send: begin');
         var uu = uuid();
         var api_msg = { 'msg': msg,
                         'uuid': uu
@@ -122,6 +126,7 @@ HyBridge.prototype = {
         if (this.port == null) {
             return false;
         }
+        console.log(api_msg);
         this.port.postMessage(api_msg);
         this.pending[uu] = { 'msg': api_msg, 'cb': on_reply_cb };
         return uu;
