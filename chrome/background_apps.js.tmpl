@@ -39,51 +39,19 @@ function app_one(config) {
     console.log(config);
     this.window = new window_feat(config, "app_one.html", 5000);
     this.config = config;
-    this.app_name = 'app_one';
+    this.name = 'app_one';
 }
 
 app_one.prototype = {
     hybridge: null,
-    app_name: null,
+    name: null,
     port: null,
+
     cmds: ["hybridge_track_status"],
     bg_cmds: ["window_open"],
 
     register: function(hybridge) {
         this.hybridge = hybridge;
-    },
-
-    accept_persist_conn: function(port) {
-        console.log('accept_persist');
-        var _this = this;
-        this.port = port;
-        this.port.onMessage.addListener(
-            function(msg) { return _this.receive(msg); });
-
-        // TODO: on release or how it is called mgmt
-    },
-
-    // on message from web-app
-    receive: function(api_msg) {
-        console.log('message received by app_one:');
-        console.log(api_msg);
-
-        if ('msg' in api_msg) {
-            var app_msg = api_msg.msg;
-            if ('command' in app_msg &&
-                this.cmds.indexOf(app_msg.command) != -1) {
-                var args = [];
-                if ('args' in app_msg) {
-                    args = app_msg.args;
-                }
-                var ret = this[app_msg.command].apply(this, args);
-                // var api_reply = {'reply': ret, 'complete': false, 'uuid': api_msg.uuid};
-
-                // this.port.postMessage(api_reply);
-                return;
-            }
-        }
-        this.hybridge.ws_send(this.app_name, api_msg);
     },
 
     ws_receive: function(api_msg) {
@@ -102,7 +70,7 @@ app_one.prototype = {
                 }
                 var ret = this[app_msg.command].apply(this, args);
                 var api_reply = {'reply': ret, 'uuid': api_msg.uuid};
-                this.hybridge.ws_send(this.app_name, api_reply);
+                this.hybridge.ws_send(this.name, api_reply);
 
                 return;
             }

@@ -150,6 +150,29 @@ HyBridge.prototype = {
             app[hyb_msg.command].apply(app, hyb_msg.args);
         }
         return ws_receive;
+    },
+
+    // on message from web-app
+    receive: function(app, api_msg) {
+        console.log('message received by app:' + app.name);
+        console.log(api_msg);
+
+        if ('msg' in api_msg) {
+            var app_msg = api_msg.msg;
+            if ('command' in app_msg &&
+                app.cmds.indexOf(app_msg.command) != -1) {
+                var args = [];
+                if ('args' in app_msg) {
+                    args = app_msg.args;
+                }
+                var ret = app[app_msg.command].apply(this, args);
+                // var api_reply = {'reply': ret, 'complete': false, 'uuid': api_msg.uuid};
+
+                // this.port.postMessage(api_reply);
+                return;
+            }
+        }
+        this.ws_send(app.name, api_msg);
     }
 }
 
@@ -172,8 +195,11 @@ function main()
     chrome.runtime.onConnectExternal.addListener(function(port) {
         if (config.apps[port.name] !== undefined) {
             var app = config.apps[port.name];
+            var _this = hybridge;
 
-            app.accept_persist_conn(port);
+            app.port = port;
+            app.port.onMessage.addListener(
+                function(msg) { console.log("NEW LIST"); return _this.receive(app, msg); });
         }
     });
 }
