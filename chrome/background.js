@@ -125,7 +125,7 @@ HyBridge.prototype = {
                 ('msg' in hyb_msg['msg'] || 'reply' in hyb_msg['msg'])) {
                 var api_msg = hyb_msg['msg'];
 
-                app.ws_receive(api_msg);
+                _this.ws_app_receive(app, api_msg);
 
                 return;
             }
@@ -150,6 +150,37 @@ HyBridge.prototype = {
             app[hyb_msg.command].apply(app, hyb_msg.args);
         }
         return ws_receive;
+    },
+
+    ws_app_receive: function(app, api_msg) {
+        console.log('on_bg_message');
+        console.log(api_msg);
+        if ('msg' in api_msg && 'command' in api_msg.msg) {
+            var app_msg = api_msg.msg;
+            console.log('bg_cmds');
+            console.log(app.bg_cmds);
+            console.log(app_msg.command);
+            if (app.bg_cmds.indexOf(app_msg.command) != -1) {
+                console.log('innnn');
+                var args = [];
+                if ('args' in app_msg) {
+                    args = app_msg.args;
+                }
+                var ret = app[app_msg.command].apply(app, args);
+                var api_reply = {'reply': ret, 'uuid': api_msg.uuid};
+                this.ws_send(app.name, api_reply);
+
+                return;
+            }
+        }
+        console.log('App one: received msg');
+        console.log(api_msg);
+        if (app.port != null) {
+            app.port.postMessage(api_msg);
+        }
+        else {
+            console.log('port not available');
+        }
     },
 
     // on message from web-app

@@ -54,37 +54,6 @@ app_one.prototype = {
         this.hybridge = hybridge;
     },
 
-    ws_receive: function(api_msg) {
-        console.log('on_bg_message');
-        console.log(api_msg);
-        if ('msg' in api_msg && 'command' in api_msg.msg) {
-            var app_msg = api_msg.msg;
-            console.log('bg_cmds');
-            console.log(this.bg_cmds);
-            console.log(app_msg.command);
-            if (this.bg_cmds.indexOf(app_msg.command) != -1) {
-                console.log('innnn');
-                var args = [];
-                if ('args' in app_msg) {
-                    args = app_msg.args;
-                }
-                var ret = this[app_msg.command].apply(this, args);
-                var api_reply = {'reply': ret, 'uuid': api_msg.uuid};
-                this.hybridge.ws_send(this.name, api_reply);
-
-                return;
-            }
-        }
-        console.log('App one: received msg');
-        console.log(api_msg);
-        if (this.port != null) {
-            this.port.postMessage(api_msg);
-        }
-        else {
-            console.log('port not available');
-        }
-    },
-
     window_open: function() {
         this.window.open();
         return {'complete': true, 'success': true};
