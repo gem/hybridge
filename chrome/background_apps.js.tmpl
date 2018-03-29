@@ -33,7 +33,6 @@
 
 console.log("background_apps.js: begin");
 
-
 function app_one(config) {
     console.log('app_one initialization');
     console.log(config);
@@ -47,8 +46,10 @@ app_one.prototype = {
     name: null,
     port: null,
 
-    cmds: ["hybridge_track_status"],
-    bg_cmds: ["window_open"],
+    // TODO: symbolic routing: key: *, 'to' as 'other'
+    routes: {'ext': {'window_open': {'to': 'bridge'},
+                     'set_cells': {'to': 'web'}},
+             'web': {'ext_app_open': {'to': 'ext'}}},
 
     register: function(hybridge) {
         this.hybridge = hybridge;
@@ -56,7 +57,7 @@ app_one.prototype = {
 
     window_open: function() {
         this.window.open();
-        return {'complete': true, 'success': true};
+        return {'success': true};
     },
 
     hybridge_track_status: function() {

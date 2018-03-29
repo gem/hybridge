@@ -61,7 +61,7 @@ class AppOne:
         print("CMD FIRED: [%s]" % cmd)
         subprocess.Popen(cmd)
 
-        return {'complete': True, 'success': True}
+        return {'success': True}
 
     def send(self, api_msg):
         hyb_msg = {'app': self.name, 'msg': api_msg}

@@ -74,7 +74,7 @@ HyBridge.prototype = {
                     console.log('reply cb fired!');
                     this.pending[uu].cb(uu, reply);
                 }
-                if (reply['complete']) {
+                if (reply.complete === undefined || reply['complete']) {
                     console.log('pending removed!');
                     delete this.pending[uu];
                 }

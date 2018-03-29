@@ -29,11 +29,157 @@
  *
  */
 
+// Router msg syntax
+// -----------------
+// hyb_msg = {'app':<app_name> , 'frm': <from>, 'msg':<api_msg>}
+// api_msg = {'msg'|'reply': <app_msg>, 'uuid':<uuid> }
+// app_msg = {<('command', 'args':[])|('result': <obj|bool>, complete: <True|False>)>}
+
+// Ext msg syntax
+// hyb_msg = {'app':<app_name> , 'msg':<api_msg>}
+// api_msg = {'msg'|'reply': <app_msg>, 'uuid':<uuid> }
+// app_msg = {<('command', 'args':[])|('result': <obj|bool>, complete: <True|False>)>}
+
+// Web msg syntax
+// --------------
+// hyb_msg = n.a.
+// api_msg = {'msg'|'reply': <app_msg>, 'uuid':<uuid> }
+// app_msg = {<('command', 'args':[])|('result': <obj|bool>, complete: <True|False>)>}
+
+// The missing parts of hyb_msg in web and ext messages is integrated or removed by Router
+
 console.log("background.js: begin");
 
 var hybridge = null;
 
+function Router(hybridge)
+{
+    this.hybridge = hybridge;
+}
+
+Router.prototype = {
+    hybridge: null,
+    pendings: {},
+
+    add_reply: function(frm, app_name, api_msg, app_msg)
+    {
+        var hyb_msg = {
+            'frm': frm,
+            'app': app_name,
+            'msg': {
+                'uuid': api_msg.uuid,
+                'reply': app_msg}};
+
+        this.add(hyb_msg);
+    },
+
+    add: function(hyb_msg)
+    {
+        console.log("Router add");
+        console.log(hyb_msg);
+
+        var app = this.hybridge.apps[hyb_msg.app];
+        var api_msg = hyb_msg['msg'];
+
+        if (app === undefined || api_msg == false) {
+            console.log('malformed add message:');
+            console.log(hyb_msg);
+            return;
+        }
+
+        if ('msg' in api_msg) {
+            var cmd_name = api_msg['msg']['command'];
+            var route = app.routes[hyb_msg['frm']][cmd_name];
+            var cmd = app[cmd_name];
+            this.pendings[api_msg.uuid] = {'route': route, 'msg': hyb_msg};
+
+            if (cmd_name === undefined || route === undefined) {
+                console.log('malformed message ' + cmd_name);
+                console.log(hyb_msg);
+                delete this.pendings[api_msg.uuid];
+                return false;
+            }
+            console.log("CHECKPT");
+            console.log(hyb_msg);
+            if (route.to == 'bridge') {
+                if (cmd === undefined) {
+                    delete this.pendings[api_msg.uuid];
+                    return false;
+                }
+                var app_msg = api_msg.msg;
+                console.log(app_msg.command);
+
+                var args = [];
+                if ('args' in app_msg) {
+                    args = app_msg.args;
+                }
+                console.log("APPLY HERE!");
+                var ret = app[app_msg.command].apply(app, args);
+                // FIXME: send feedback
+
+                this.add_reply(route.to, app.name, api_msg, ret);
+
+                return;
+            }
+            else if (route.to == 'web') {
+                console.log("Route to web");
+                if (app.port != null) {
+                    app.port.postMessage(api_msg);
+                }
+                else {
+                    console.log('port not available');
+                }
+                console.log(hyb_msg);
+            }
+            else if (route.to == 'ext') {
+                console.log("Route to ext");
+                this.hybridge.ws_send(app.name, api_msg);
+            }
+            else {
+                console.log("Route to unknown");
+                console.log(hyb_msg);
+            }
+        }
+        else {
+            // reply case
+            console.log('reply case');
+            console.log(hyb_msg);
+            var pending = this.pendings[api_msg.uuid];
+            if (pending === undefined) {
+                console.log('not pending msg [' + api_msg.uuid + ']');
+                return;
+            }
+            console.log(pending);
+
+            var api_reply = {'uuid': api_msg.uuid, 'reply': api_msg.reply};
+
+            // destination was bridge
+            if (pending.msg.frm == 'ext') {
+                // msg from external app
+                if (this.hybridge.ws_send(app.name, api_reply) == false) {
+                    console.log('Application [' + app.name + ']: port not available');
+                }
+            }
+            else if (pending.msg.frm == 'web') {
+                if (app.port != null) {
+                    app.port.postMessage(api_reply);
+                }
+                else {
+                    console.log('port not available');
+                }
+            }
+            if (('complete' in api_msg.reply) == false ||
+                api_msg.reply.complete == true) {
+                console.log('REMOVE PENDING');
+                delete this.pendings[api_msg.uuid];
+            }
+        }
+    }
+}
+
 function HyBridge(config) {
+    this.router = new Router(this);
+
     this.ws_url = "ws" + (config.is_secure ? "s" : "") + "://" +
         config.application_url + config.ws_address;
     for (app in config.apps) {
@@ -44,6 +190,7 @@ function HyBridge(config) {
 
 HyBridge.prototype = {
     apps: {},
+    router: null,
     ws_url: "",
     ws: null,
     watchdog_handle: null,
@@ -75,11 +222,30 @@ HyBridge.prototype = {
                 this.close();
                 _this.ws = null;
             });
-            this.ws.addEventListener('message', this.ws_receive_gen());
+            var _this = this;
+            this.ws.addEventListener(
+                'message',
+                function ws_receive(event) {
+                    var hyb_msg = JSON.parse(event.data);
+                    hyb_msg.frm = 'ext';
+                    _this.router.add(hyb_msg);
+                });
         }
         catch(err) {
             console.log('WS connection failed: '+ err.message);
         }
+    },
+    ws_send: function (app, api_msg) { // [, frm] NOTE: maybe not required, currently not used
+        if (this.ws == null) {
+            console.log('local app not connected');
+            return false;
+        }
+        var hyb_msg = {'app': app, 'msg': api_msg};
+        if (arguments.length > 2) {
+            var frm =  arguments[2]
+            hyb_msg.frm = frm;
+        }
+        this.ws.send(JSON.stringify(hyb_msg));
     },
     watchdog: function () {
         console.log("WD here " + this.ws);
@@ -93,117 +259,6 @@ HyBridge.prototype = {
 
         // run watchdog
         this.watchdog_handle = setInterval(function wd_func(obj) { obj.watchdog(); }, 1000, _this);
-    },
-    ws_send: function (app, msg) {
-        if (this.ws == null) {
-            console.log('local app not connected');
-            return false;
-        }
-        // if (this.apps[app].port == null) {
-        //     console.log('web app not connected');
-        //     return false;
-        // }
-        var supermsg = {'app': app, 'msg': msg};
-        this.ws.send(JSON.stringify(supermsg));
-    },
-    // hyb_msg = {'app':<app_name> , 'msg':<api_msg>}
-    // api_msg = {'msg'|'reply': <app_msg>, 'uuid'}
-    // app_msg = {'command', 'args':[], complete: <True|False>}
-    ws_receive_gen: function () {
-        var _this = this;
-        function ws_receive(event) {
-            console.log("WS2 MESSAGE fired");
-            console.log(event.data);
-            var hyb_msg = JSON.parse(event.data);
-
-            if (hyb_msg.app == undefined)
-                return;
-
-            app = _this.apps[hyb_msg.app];
-
-            if ('msg' in hyb_msg &&
-                ('msg' in hyb_msg['msg'] || 'reply' in hyb_msg['msg'])) {
-                var api_msg = hyb_msg['msg'];
-
-                _this.ws_app_receive(app, api_msg);
-
-                return;
-            }
-            console.log('OUT OF CORRECT SCOPE!!!!!!');
-            return;
-            if (hyb_msg.command == undefined) {
-                console.log('malformed command, rejected' + hyb_msg);
-                return;
-            }
-
-            if (!hyb_msg.app in config.apps) {
-                console.log('app ' + hyb_msg.app + ' not found');
-                return;
-            }
-
-            app = config.apps[hyb_msg.app];
-            if (!hyb_msg.command in app) {
-                console.log('command '+ hyb_msg.command + ' not found');
-                return;
-            }
-
-            app[hyb_msg.command].apply(app, hyb_msg.args);
-        }
-        return ws_receive;
-    },
-
-    ws_app_receive: function(app, api_msg) {
-        console.log('on_bg_message');
-        console.log(api_msg);
-        if ('msg' in api_msg && 'command' in api_msg.msg) {
-            var app_msg = api_msg.msg;
-            console.log('bg_cmds');
-            console.log(app.bg_cmds);
-            console.log(app_msg.command);
-            if (app.bg_cmds.indexOf(app_msg.command) != -1) {
-                console.log('innnn');
-                var args = [];
-                if ('args' in app_msg) {
-                    args = app_msg.args;
-                }
-                var ret = app[app_msg.command].apply(app, args);
-                var api_reply = {'reply': ret, 'uuid': api_msg.uuid};
-                this.ws_send(app.name, api_reply);
-
-                return;
-            }
-        }
-        console.log('App one: received msg');
-        console.log(api_msg);
-        if (app.port != null) {
-            app.port.postMessage(api_msg);
-        }
-        else {
-            console.log('port not available');
-        }
-    },
-
-    // on message from web-app
-    receive: function(app, api_msg) {
-        console.log('message received by app:' + app.name);
-        console.log(api_msg);
-
-        if ('msg' in api_msg) {
-            var app_msg = api_msg.msg;
-            if ('command' in app_msg &&
-                app.cmds.indexOf(app_msg.command) != -1) {
-                var args = [];
-                if ('args' in app_msg) {
-                    args = app_msg.args;
-                }
-                var ret = app[app_msg.command].apply(this, args);
-                // var api_reply = {'reply': ret, 'complete': false, 'uuid': api_msg.uuid};
-
-                // this.port.postMessage(api_reply);
-                return;
-            }
-        }
-        this.ws_send(app.name, api_msg);
     }
 }
 
@@ -230,7 +285,11 @@ function main()
 
             app.port = port;
             app.port.onMessage.addListener(
-                function(msg) { console.log("NEW LIST"); return _this.receive(app, msg); });
+                function(api_msg) {
+                    console.log("NEW LIST ROUT");
+                    var hyb_msg = {'frm': 'web', 'app': app.name, 'msg': api_msg};
+                    return _this.router.add(hyb_msg);
+                });
         }
     });
 }
