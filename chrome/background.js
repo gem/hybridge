@@ -90,7 +90,7 @@ Router.prototype = {
         if ('msg' in api_msg) {
             var cmd_name = api_msg['msg']['command'];
             var route = app.routes[hyb_msg['frm']][cmd_name];
-            var cmd = app[cmd_name];
+            var cmd = app[cmd_name], hyb_cmd = undefined;
             this.pendings[api_msg.uuid] = {'route': route, 'msg': hyb_msg};
 
             if (cmd_name === undefined || route === undefined) {
@@ -101,10 +101,14 @@ Router.prototype = {
             }
             console.log("CHECKPT");
             console.log(hyb_msg);
+            console.log(route);
             if (route.to == 'bridge') {
                 if (cmd === undefined) {
-                    delete this.pendings[api_msg.uuid];
-                    return false;
+                    hyb_cmd = this.hybridge.routes[hyb_msg['frm']][cmd_name];
+                    if (hyb_cmd === undefined) {
+                        delete this.pendings[api_msg.uuid];
+                        return false;
+                    }
                 }
                 var app_msg = api_msg.msg;
                 console.log(app_msg.command);
@@ -113,8 +117,14 @@ Router.prototype = {
                 if ('args' in app_msg) {
                     args = app_msg.args;
                 }
-                console.log("APPLY HERE!");
-                var ret = app[app_msg.command].apply(app, args);
+
+                if (hyb_cmd !== undefined) {
+                    console.log("HERE RUN");
+                    var ret = this.hybridge[app_msg.command].apply(api_msg);
+                }
+                else {
+                    var ret = app[app_msg.command].apply(app, args);
+                }
                 // FIXME: send feedback
 
                 this.add_reply(route.to, app.name, api_msg, ret);
@@ -182,15 +192,30 @@ function HyBridge(config) {
 
     this.ws_url = "ws" + (config.is_secure ? "s" : "") + "://" +
         config.application_url + config.ws_address;
-    for (app in config.apps) {
-        this.apps[app] = config.apps[app];
-        config.apps[app].register(this);
+    for (var app_id in config.apps) {
+        var app = config.apps[app_id];
+        this.apps[app_id] = app;
+        for (var dest in this.routes) {
+            var cmds = this.routes[dest];
+            for (var cmd in cmds) {
+                if (app.routes[dest] === undefined) {
+                    app.routes[dest] = {};
+                }
+                app.routes[dest][cmd] = cmds[cmd];
+            }
+        }
+
+        app.register(this);
     }
 }
 
 HyBridge.prototype = {
     apps: {},
     router: null,
+    routes: {'web': {'hybridge_track_status': {'to': 'bridge'}},
+             'ext': {},
+             'bridge': {}
+            },
     ws_url: "",
     ws: null,
     watchdog_handle: null,
@@ -252,6 +277,10 @@ HyBridge.prototype = {
         if (this.ws == null) {
             this.ws_connect();
         }
+    },
+    hybridge_track_status: function (api_msg) {
+        console.log("TRACK_STATUS: from hybridge");
+        return {success: true, complete: false};
     },
     run: function () {
         var _this = this;

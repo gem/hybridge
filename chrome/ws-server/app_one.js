@@ -47,12 +47,11 @@ function AppOne(name)
 
     console.log('before');
 
-    // FIXME: REENABLE IT
-    // this.track_uuid = this.hybridge.send(
-    //     {'command': 'hybridge_track_status'},
-    //     function (uuid, msg) { console.log('track status');
-    //                            console.log(msg);
-    //                          });
+    this.track_uuid = this.hybridge.send(
+        {'command': 'hybridge_track_status'},
+        function (uuid, msg) { console.log('track status');
+                               console.log(msg);
+                             });
 
     // bg-side it register cb in on_open, on_close and fire back the current
     // connection status

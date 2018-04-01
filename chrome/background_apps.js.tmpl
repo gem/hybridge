@@ -58,11 +58,6 @@ app_one.prototype = {
     window_open: function() {
         this.window.open();
         return {'success': true};
-    },
-
-    hybridge_track_status: function() {
-        // set something in the bg main to manage the tracking
-        console.log('hybridge_track_status FIRED!');
     }
 }
 
@@ -75,7 +70,7 @@ function app_two(config) {
 
 app_two.prototype = {
     port: null,
-
+    routes: {},
     register: function(hybridge) {
         this.hybridge = hybridge;
     },
@@ -94,6 +89,7 @@ function app_three(config) {
 
 app_three.prototype = {
     port: null,
+    routes: {},
 
     register: function(hybridge) {
         this.hybridge = hybridge;
