@@ -38,6 +38,19 @@ function on_cmd_cb(uu, msg)
 }
 
 
+var track_status_ct = 0;
+function track_status(uuid, msg)
+{
+    track_status_ct++;
+    if (msg.success) {
+        document.getElementById("track").style.backgroundColor = 'green';
+    }
+    else {
+        document.getElementById("track").style.backgroundColor = 'red';
+    }
+    document.getElementById("track").innerHTML = track_status_ct;
+}
+
 function AppOne(name)
 {
     this.name = name;
@@ -48,10 +61,7 @@ function AppOne(name)
     console.log('before');
 
     this.track_uuid = this.hybridge.send(
-        {'command': 'hybridge_track_status'},
-        function (uuid, msg) { console.log('track status');
-                               console.log(msg);
-                             });
+        {'command': 'hybridge_track_status'}, track_status);
 
     // bg-side it register cb in on_open, on_close and fire back the current
     // connection status
@@ -87,8 +97,10 @@ AppOne.prototype = {
     }
 }
 
+var app_one;
+
 window.onload = function window_onload() {
-    var app_one = new AppOne('app_one');
+    app_one = new AppOne('app_one');
 
     document.getElementById("to-hybridge-btn").addEventListener(
         "click",

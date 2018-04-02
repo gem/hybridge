@@ -45,7 +45,7 @@ app_one.prototype = {
     hybridge: null,
     name: null,
     port: null,
-
+    port_close_cbs: {},
     // TODO: symbolic routing: key: *, 'to' as 'other'
     routes: {'ext': {'window_open': {'to': 'bridge'},
                      'set_cells': {'to': 'web'}},
@@ -69,7 +69,10 @@ function app_two(config) {
 }
 
 app_two.prototype = {
+    hybridge: null,
+    name: null,
     port: null,
+    port_close_cbs: {},
     routes: {},
     register: function(hybridge) {
         this.hybridge = hybridge;
@@ -88,7 +91,9 @@ function app_three(config) {
 }
 
 app_three.prototype = {
+    name: null,
     port: null,
+    port_close_cbs: {},
     routes: {},
 
     register: function(hybridge) {

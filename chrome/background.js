@@ -120,7 +120,8 @@ Router.prototype = {
 
                 if (hyb_cmd !== undefined) {
                     console.log("HERE RUN");
-                    var ret = this.hybridge[app_msg.command].apply(api_msg);
+                    this.hybridge[app_msg.command].apply(this.hybridge, [hyb_msg]);
+                    return;
                 }
                 else {
                     var ret = app[app_msg.command].apply(app, args);
@@ -218,6 +219,8 @@ HyBridge.prototype = {
             },
     ws_url: "",
     ws: null,
+    ws_is_connect: false,
+    ws_status_cbs: {},
     watchdog_handle: null,
     ws_connect: function() {
         var _this = this;
@@ -226,28 +229,30 @@ HyBridge.prototype = {
         try {
             this.ws = new WebSocket(this.ws_url);
             this.ws.addEventListener('open', function (event) {
-                for (var app in this.apps) {
-                    if ('on_hybridge_status' in app) {
-                        app.on_hybridge_status(true);
+                console.log("WS OPEN fired");
+                if (_this.ws_is_connect == false) {
+                    _this.ws_is_connect = true;
+                    for (var key in _this.ws_status_cbs) {
+                        var ws_status_cb = _this.ws_status_cbs[key];
+                        ws_status_cb(true);
                     }
                 }
-                console.log("WS OPEN fired");
             });
             this.ws.addEventListener('close', function (event) {
+                _this.ws = null;
                 console.log("WS CLOSE fired");
-                for (var app in this.apps) {
-                    if ('on_hybridge_status' in app) {
-                        app.on_hybridge_status(false);
+                if (_this.ws_is_connect == true) {
+                    _this.ws_is_connect = false;
+                    for (var key in _this.ws_status_cbs) {
+                        var ws_status_cb = _this.ws_status_cbs[key];
+                        ws_status_cb(false);
                     }
                 }
-                _this.ws = null;
             });
             this.ws.addEventListener('error', function (event) {
                 console.log("WS ERROR fired");
-                this.close();
-                _this.ws = null;
             });
-            var _this = this;
+
             this.ws.addEventListener(
                 'message',
                 function ws_receive(event) {
@@ -260,12 +265,12 @@ HyBridge.prototype = {
             console.log('WS connection failed: '+ err.message);
         }
     },
-    ws_send: function (app, api_msg) { // [, frm] NOTE: maybe not required, currently not used
+    ws_send: function (app_name, api_msg) { // [, frm] NOTE: maybe not required, currently not used
         if (this.ws == null) {
             console.log('local app not connected');
             return false;
         }
-        var hyb_msg = {'app': app, 'msg': api_msg};
+        var hyb_msg = {'app': app_name, 'msg': api_msg};
         if (arguments.length > 2) {
             var frm =  arguments[2]
             hyb_msg.frm = frm;
@@ -278,9 +283,21 @@ HyBridge.prototype = {
             this.ws_connect();
         }
     },
-    hybridge_track_status: function (api_msg) {
+    hybridge_track_status: function (hyb_msg) {
+        var _this = this;
         console.log("TRACK_STATUS: from hybridge");
-        return {success: true, complete: false};
+        function track_status_cb(is_conn) {
+            _this.router.add_reply('bridge', hyb_msg.app, hyb_msg.msg,
+                                   {'success': is_conn, 'complete': false});
+        }
+        this.ws_status_cbs[hyb_msg.msg.uuid] = track_status_cb;
+
+        var app = this.apps[hyb_msg.app];
+
+        app.port_close_cbs[hyb_msg.msg.uuid] = function ws_status_cbs_cleaner(uuid) {
+            delete _this.ws_status_cbs[uuid];
+        };
+        track_status_cb(this.ws != null);
     },
     run: function () {
         var _this = this;
@@ -319,6 +336,13 @@ function main()
                     var hyb_msg = {'frm': 'web', 'app': app.name, 'msg': api_msg};
                     return _this.router.add(hyb_msg);
                 });
+            app.port.onDisconnect.addListener(function(port) {
+                for (var cb_idx in app.port_close_cbs) {
+                    var cb = app.port_close_cbs[cb_idx];
+                    cb(cb_idx);
+                }
+                app.port_close_cbs = {};
+            });
         }
     });
 }
