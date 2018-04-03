@@ -52,8 +52,9 @@ HyBridge.prototype = {
         if (this.port != null) {
             // FIXME close previous
         }
+        console.log('NAME: ' + this.app.name);
         this.port = chrome.runtime.connect(
-            this.hybridge_id, {name: "app_one"});
+            this.hybridge_id, {name: this.app.name});
         this.port.onMessage.addListener(function(msg) { return _this.receive(msg)});
     },
 

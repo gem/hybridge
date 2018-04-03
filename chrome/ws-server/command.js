@@ -45,7 +45,7 @@ window.onload = function() {
     document.getElementById("app_two_send").addEventListener(
         "click",
         function() {
-            run_command('app_two', 'send', 'arg-one', 'arg-two');
+            run_command('app_two', 'set_cells', 'arg-ein', 'arg-zwei');
             console.log("Fire a command to command page");
         }
     );
@@ -60,7 +60,7 @@ window.onload = function() {
     document.getElementById("app_three_send").addEventListener(
         "click",
         function() {
-            run_command('app_three', 'send', 'arg-one', 'arg-two');
+            run_command('app_three', 'set_cells', 'arg-uno', 'arg-due');
             console.log("Fire a command to command page");
         }
     );

@@ -2,24 +2,16 @@
 - manage ssl certificates with application
 
 # TODO LIST
-- web-api with a flag to inform about connection status
-  . web-api new command that do:
-      . submit a cb to start and to stop connection to ext_app
-      . submit a cb to remove start/stop cb when web_app disconnect
-      . run explicitly the callback to reply the current status
-
-- ext-api with a flag to inform about connection status
-  . ext-api new command that do:
-      . ext-bg retrieve command setting current status to unknown
-      . submit a cb to start and to stop connection to web_app
-      . submit a cb to remove start/stop cb when ext_app disconnect
-      . run explicitly the callback to reply the current status
-
-
-- update messages documentation
+- manage and test disconnections (both sides)
 - client header modification by add-on: see https://developer.chrome.com/extensions/webRequest
 
-- manage and test disconnections (both sides)
+DONE - web-api with a flag to inform about connection status
+  DONE . web-api new command that do:
+     DONE . submit a cb to start and to stop connection to ext_app
+     DONE . submit a cb to remove start/stop cb when web_app disconnect
+     DONE . run explicitly the callback to reply the current status
+
+DONE - update messages documentation
 
 DONE - web-api: hide HyBridge behind App class
 

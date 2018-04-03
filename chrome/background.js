@@ -94,7 +94,7 @@ Router.prototype = {
             this.pendings[api_msg.uuid] = {'route': route, 'msg': hyb_msg};
 
             if (cmd_name === undefined || route === undefined) {
-                console.log('malformed message ' + cmd_name);
+                console.log('malformed message: ' + cmd_name);
                 console.log(hyb_msg);
                 delete this.pendings[api_msg.uuid];
                 return false;

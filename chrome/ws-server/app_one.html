@@ -3,7 +3,7 @@
   <title>APP_ONE</title>
   <script src="uuid-random.min.js"></script>
   <script src="hybridge.js"></script>
-  <script src="app_one.js"></script>
+  <script src="app_web.js"></script>
   <style>
     .tab {
     border-collapse: collapse;
@@ -43,4 +43,22 @@
   </table>
 </div>
 </body>
+<script>
+var app_web;
+
+window.onload = function window_onload() {
+    app_web = new AppWeb('app_one');
+
+    document.getElementById("to-hybridge-btn").addEventListener(
+        "click",
+        function() {
+            console.log('send msg');
+            var arg = document.getElementById("to-hybridge-txt").value;
+            var uu = app_web.send({'command': 'ext_app_open', 'args': [arg]},
+                                  on_cmd_cb);
+            console.log("FIRED CMD WITH UUID: " + uu);
+        }
+    );
+}
+  </script>
 </html>

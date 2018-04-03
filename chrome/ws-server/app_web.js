@@ -51,7 +51,7 @@ function track_status(uuid, msg)
     document.getElementById("track").innerHTML = track_status_ct;
 }
 
-function AppOne(name)
+function AppWeb(name)
 {
     this.name = name;
     this.hybridge = new HyBridge(this);
@@ -69,7 +69,7 @@ function AppOne(name)
     console.log('after');
 }
 
-AppOne.prototype = {
+AppWeb.prototype = {
     name: null,
     hybridge: null,
     track_uuid: null,
@@ -96,21 +96,3 @@ AppOne.prototype = {
         return this.hybridge.send(msg, cmd_cb);
     }
 }
-
-var app_one;
-
-window.onload = function window_onload() {
-    app_one = new AppOne('app_one');
-
-    document.getElementById("to-hybridge-btn").addEventListener(
-        "click",
-        function() {
-            console.log('send msg');
-            var arg = document.getElementById("to-hybridge-txt").value;
-            var uu = app_one.send({'command': 'ext_app_open', 'args': [arg]},
-                                  on_cmd_cb);
-            console.log("FIRED CMD WITH UUID: " + uu);
-        }
-    );
-}
-

@@ -1,10 +1,64 @@
 <html>
 <head>
-    <title>APP_TWO</title>
+  <title>APP_TWO</title>
+  <script src="uuid-random.min.js"></script>
+  <script src="hybridge.js"></script>
+  <script src="app_web.js"></script>
+  <style>
+    .tab {
+    border-collapse: collapse;
+    }
+    .tab td, th {
+    padding: 8px;
+    }
+
+    .tab td {
+    border: 1px solid gray;
+    }
+
+    div#track {
+    margin: 4px;
+    padding: 4px;
+    text-align: center;
+    background-color: orange;
+    }
+  </style>
 </head>
 <body>
 <div>
-<h1>APP_TWO</h1>
+  <h1>APP_TWO</h1>
+  <table class="tab">
+    <tr><th>ext-app linked</th>
+      <td colspan=2 id="ext_app_linked"><div id="track">0</div></td>
+      </tr>
+    <tr><th>from hybridge</th>
+      <td id="arg-a"></td>
+      <td id="arg-b"></td>
+    </tr>
+    <tr>
+      <th>to hybridge</th>
+      <td><input type="text" id="to-hybridge-txt"></td>
+      <td><button id="to-hybridge-btn" type="button">TO HYBRIDGE</button></td>
+    </tr>
+  </table>
 </div>
 </body>
+<script>
+var app_web;
+
+window.onload = function window_onload() {
+    app_web = new AppWeb('app_two');
+
+    document.getElementById("to-hybridge-btn").addEventListener(
+        "click",
+        function() {
+            console.log('send msg');
+            var arg = document.getElementById("to-hybridge-txt").value;
+            var uu = app_web.send({'command': 'ext_app_open', 'args': [arg]},
+                                  on_cmd_cb);
+            console.log("FIRED CMD WITH UUID: " + uu);
+        }
+    );
+}
+  </script>
 </html>

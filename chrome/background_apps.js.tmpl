@@ -61,11 +61,13 @@ app_one.prototype = {
     }
 }
 
+
 function app_two(config) {
     console.log('app_two initialization');
     console.log(config);
     this.window = new window_feat(config, "app_two.html", 5000);
     this.config = config;
+    this.name = 'app_two';
 }
 
 app_two.prototype = {
@@ -73,28 +75,39 @@ app_two.prototype = {
     name: null,
     port: null,
     port_close_cbs: {},
-    routes: {},
+    // TODO: symbolic routing: key: *, 'to' as 'other'
+    routes: {'ext': {'window_open': {'to': 'bridge'},
+                     'set_cells': {'to': 'web'}},
+             'web': {'ext_app_open': {'to': 'ext'}}},
+
     register: function(hybridge) {
         this.hybridge = hybridge;
     },
 
     window_open: function() {
         this.window.open();
+        return {'success': true};
     }
 }
+
 
 function app_three(config) {
     console.log('app_three initialization');
     console.log(config);
     this.window = new window_feat(config, "app_three.html", 5000);
     this.config = config;
+    this.name = 'app_three';
 }
 
 app_three.prototype = {
+    hybridge: null,
     name: null,
     port: null,
     port_close_cbs: {},
-    routes: {},
+    // TODO: symbolic routing: key: *, 'to' as 'other'
+    routes: {'ext': {'window_open': {'to': 'bridge'},
+                     'set_cells': {'to': 'web'}},
+             'web': {'ext_app_open': {'to': 'ext'}}},
 
     register: function(hybridge) {
         this.hybridge = hybridge;
@@ -102,8 +115,10 @@ app_three.prototype = {
 
     window_open: function() {
         this.window.open();
+        return {'success': true};
     }
 }
+
 
 var config = {
     application_url: "localhost:8010/",

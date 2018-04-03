@@ -16,10 +16,10 @@ home_content = open('index.html').read()
 home_js = open('index.js').read()
 uuid_js = open('uuid-random.min.js').read()
 app_one_content = open('app_one.html').read()
-hybridge_js = open('hybridge.js').read()
-app_one_js = open('app_one.js').read()
 app_two_content = open('app_two.html').read()
 app_three_content = open('app_three.html').read()
+hybridge_js = open('hybridge.js').read()
+app_web_js = open('app_web.js').read()
 
 apps = {}
 
@@ -44,9 +44,10 @@ class AppOnePage(tornado.web.RequestHandler):
         self.write(app_one_content)
 
 
-class AppOne:
-    def __init__(self):
-        self.name = 'app_one'
+class ExtApp:
+    def __init__(self, name, color):
+        self.name = name
+        self.color = color
         self.allowed_meths = ['ext_app_open']
         self.pending = {}
 
@@ -57,7 +58,8 @@ class AppOne:
             return False
         print("ext_app_open: 2")
 
-        cmd = ["xclock", "-geometry", "%sx%s" % (args[0], args[0])]
+        cmd = ["xclock", "-bg", self.color, "-geometry",
+               "%sx%s" % (args[0], args[0])]
         print("CMD FIRED: [%s]" % cmd)
         subprocess.Popen(cmd)
 
@@ -103,9 +105,9 @@ class AppOne:
             self.send(api_reply)
 
 
-class AppOneJS(tornado.web.RequestHandler):
+class AppWebJS(tornado.web.RequestHandler):
     def get(self):
-        self.write(app_one_js)
+        self.write(app_web_js)
 
 
 class HyBridgeJS(tornado.web.RequestHandler):
@@ -214,9 +216,15 @@ if __name__ == "__main__":
         usage(1)
 
     if sys.argv[1] == '--server':
-        app_one = AppOne()
+        app_one = ExtApp('app_one', 'cyan')
+        app_two = ExtApp('app_two', 'pink')
+        app_three = ExtApp('app_three', 'lightgreen')
 
-        apps = {'app_one': app_one}
+        apps = {
+            'app_one': app_one,
+            'app_two': app_two,
+            'app_three': app_three
+        }
 
         application = tornado.web.Application([
             (r'/websocketserver', WebSocketServer),
@@ -229,7 +237,7 @@ if __name__ == "__main__":
             (r'/uuid-random.min.js', UuidJS),
             (r'/hybridge.js', HyBridgeJS),
             (r'/app_one.html', AppOnePage),
-            (r'/app_one.js', AppOneJS),
+            (r'/app_web.js', AppWebJS),
             (r'/app_two.html', AppTwoPage),
             (r'/app_three.html', AppThreePage),
             (r'/index.js', HomeJS),
