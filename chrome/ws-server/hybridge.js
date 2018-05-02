@@ -29,8 +29,6 @@
  *
  */
 
-var hybridge_id = "cjgpdcodlpoonjhgljcikndlgodgpdfb";
-
 function HyBridge(app, on_msg_cb)
 {
     this.app = app;
@@ -40,7 +38,7 @@ function HyBridge(app, on_msg_cb)
 }
 
 HyBridge.prototype = {
-    hybridge_id: "cjgpdcodlpoonjhgljcikndlgodgpdfb",
+    hybridge_id: hybridge_id,
     app: null,
     name: null,
     port: null,

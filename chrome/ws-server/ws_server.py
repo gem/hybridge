@@ -18,6 +18,7 @@ uuid_js = open('uuid-random.min.js').read()
 app_one_content = open('app_one.html').read()
 app_two_content = open('app_two.html').read()
 app_three_content = open('app_three.html').read()
+hybridge_key_js = open('hybridge_key.js').read()
 hybridge_js = open('hybridge.js').read()
 app_web_js = open('app_web.js').read()
 
@@ -113,6 +114,11 @@ class AppWebJS(tornado.web.RequestHandler):
 class HyBridgeJS(tornado.web.RequestHandler):
     def get(self):
         self.write(hybridge_js)
+
+
+class HyBridgeKeyJS(tornado.web.RequestHandler):
+    def get(self):
+        self.write(hybridge_key_js)
 
 
 class AppTwoPage(tornado.web.RequestHandler):
@@ -235,6 +241,7 @@ if __name__ == "__main__":
     elif sys.argv[1] == '--application':
         application = tornado.web.Application([
             (r'/uuid-random.min.js', UuidJS),
+            (r'/hybridge_key.js', HyBridgeKeyJS),
             (r'/hybridge.js', HyBridgeJS),
             (r'/app_one.html', AppOnePage),
             (r'/app_web.js', AppWebJS),
@@ -243,7 +250,7 @@ if __name__ == "__main__":
             (r'/index.js', HomeJS),
             (r'/', HomePage),
         ])
-        server_port = 8000
+        server_port = 8040
     else:
         usage(2)
 
