@@ -19,48 +19,48 @@ function run_command(app, command)
 
 
 window.onload = function() {
-    document.getElementById("app_one").addEventListener(
+    document.getElementById("ipt").addEventListener(
         "click",
         function() {
-            run_command('app_one', 'window_open');
+            run_command('ipt', 'window_open');
             console.log("Fire a command to command page");
         }
     );
 
-    document.getElementById("app_one_send").addEventListener(
+    document.getElementById("ipt_send").addEventListener(
         "click",
         function() {
-            run_command('app_one', 'set_cells', 'arg-one', 'arg-two');
+            run_command('ipt', 'set_cells', 'arg-one', 'arg-two');
             console.log("Fire a command to command page");
         }
     );
 
-    document.getElementById("app_two").addEventListener(
+    document.getElementById("taxtweb").addEventListener(
         "click",
         function() {
-            run_command('app_two', 'window_open');
+            run_command('taxtweb', 'window_open');
             console.log("Fire a command to command page");
         }
     );
-    document.getElementById("app_two_send").addEventListener(
+    document.getElementById("taxtweb_send").addEventListener(
         "click",
         function() {
-            run_command('app_two', 'set_cells', 'arg-ein', 'arg-zwei');
+            run_command('taxtweb', 'set_cells', 'arg-ein', 'arg-zwei');
             console.log("Fire a command to command page");
         }
     );
 
-    document.getElementById("app_three").addEventListener(
+    document.getElementById("taxonomy").addEventListener(
         "click",
         function() {
-            run_command('app_three', 'window_open');
+            run_command('taxonomy', 'window_open');
             console.log("Fire a command to command page");
         }
     );
-    document.getElementById("app_three_send").addEventListener(
+    document.getElementById("taxonomy_send").addEventListener(
         "click",
         function() {
-            run_command('app_three', 'set_cells', 'arg-uno', 'arg-due');
+            run_command('taxonomy', 'set_cells', 'arg-uno', 'arg-due');
             console.log("Fire a command to command page");
         }
     );

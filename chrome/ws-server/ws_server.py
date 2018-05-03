@@ -15,9 +15,9 @@ import json
 home_content = open('index.html').read()
 home_js = open('index.js').read()
 uuid_js = open('uuid-random.min.js').read()
-app_one_content = open('app_one.html').read()
-app_two_content = open('app_two.html').read()
-app_three_content = open('app_three.html').read()
+ipt_content = open('ipt.html').read()
+taxtweb_content = open('taxtweb.html').read()
+taxonomy_content = open('taxonomy.html').read()
 hybridge_key_js = open('hybridge_key.js').read()
 hybridge_js = open('hybridge.js').read()
 app_web_js = open('app_web.js').read()
@@ -40,9 +40,9 @@ class UuidJS(tornado.web.RequestHandler):
         self.write(uuid_js)
 
 
-class AppOnePage(tornado.web.RequestHandler):
+class IptPage(tornado.web.RequestHandler):
     def get(self):
-        self.write(app_one_content)
+        self.write(ipt_content)
 
 
 class ExtApp:
@@ -121,14 +121,14 @@ class HyBridgeKeyJS(tornado.web.RequestHandler):
         self.write(hybridge_key_js)
 
 
-class AppTwoPage(tornado.web.RequestHandler):
+class TaxtwebPage(tornado.web.RequestHandler):
     def get(self):
-        self.write(app_two_content)
+        self.write(taxtweb_content)
 
 
-class AppThreePage(tornado.web.RequestHandler):
+class TaxonomyPage(tornado.web.RequestHandler):
     def get(self):
-        self.write(app_three_content)
+        self.write(taxonomy_content)
 
 #
 #  External application simulation
@@ -222,14 +222,14 @@ if __name__ == "__main__":
         usage(1)
 
     if sys.argv[1] == '--server':
-        app_one = ExtApp('app_one', 'cyan')
-        app_two = ExtApp('app_two', 'pink')
-        app_three = ExtApp('app_three', 'lightgreen')
+        ipt = ExtApp('ipt', 'cyan')
+        taxtweb = ExtApp('taxtweb', 'pink')
+        taxonomy = ExtApp('taxonomy', 'lightgreen')
 
         apps = {
-            'app_one': app_one,
-            'app_two': app_two,
-            'app_three': app_three
+            'ipt': ipt,
+            'taxtweb': taxtweb,
+            'taxonomy': taxonomy
         }
 
         application = tornado.web.Application([
@@ -243,10 +243,10 @@ if __name__ == "__main__":
             (r'/uuid-random.min.js', UuidJS),
             (r'/hybridge_key.js', HyBridgeKeyJS),
             (r'/hybridge.js', HyBridgeJS),
-            (r'/app_one.html', AppOnePage),
+            (r'/ipt.html', IptPage),
             (r'/app_web.js', AppWebJS),
-            (r'/app_two.html', AppTwoPage),
-            (r'/app_three.html', AppThreePage),
+            (r'/taxtweb.html', TaxtwebPage),
+            (r'/taxonomy.html', TaxonomyPage),
             (r'/index.js', HomeJS),
             (r'/', HomePage),
         ])

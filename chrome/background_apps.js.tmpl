@@ -33,15 +33,15 @@
 
 console.log("background_apps.js: begin");
 
-function app_one(config) {
-    console.log('app_one initialization');
+function ipt(config) {
+    console.log('ipt initialization');
     console.log(config);
-    this.window = new window_feat(config, "app_one.html", 5000);
+    this.window = new window_feat(config, "ipt.html", 5000);
     this.config = config;
-    this.name = 'app_one';
+    this.name = 'ipt';
 }
 
-app_one.prototype = {
+ipt.prototype = {
     hybridge: null,
     name: null,
     port: null,
@@ -62,15 +62,15 @@ app_one.prototype = {
 }
 
 
-function app_two(config) {
-    console.log('app_two initialization');
+function taxtweb(config) {
+    console.log('taxtweb initialization');
     console.log(config);
-    this.window = new window_feat(config, "app_two.html", 5000);
+    this.window = new window_feat(config, "taxtweb.html", 5000);
     this.config = config;
-    this.name = 'app_two';
+    this.name = 'taxtweb';
 }
 
-app_two.prototype = {
+taxtweb.prototype = {
     hybridge: null,
     name: null,
     port: null,
@@ -91,15 +91,15 @@ app_two.prototype = {
 }
 
 
-function app_three(config) {
-    console.log('app_three initialization');
+function taxonomy(config) {
+    console.log('taxonomy initialization');
     console.log(config);
-    this.window = new window_feat(config, "app_three.html", 5000);
+    this.window = new window_feat(config, "taxonomy.html", 5000);
     this.config = config;
-    this.name = 'app_three';
+    this.name = 'taxonomy';
 }
 
-app_three.prototype = {
+taxonomy.prototype = {
     hybridge: null,
     name: null,
     port: null,
@@ -128,30 +128,30 @@ var config = {
     apps: null
 }
 
-var app_one_config = {
+var ipt_config = {
     'hybridge': null,
     'general': config,
-    'window': {'page': 'app_one.html',
+    'window': {'page': 'ipt.html',
                'tout': 5000 }
 };
 
-var app_two_config = {
+var taxtweb_config = {
     'hybridge': null,
     'general': config,
-    'window': {'page': 'app_two.html',
+    'window': {'page': 'taxtweb.html',
                'tout': 5000 }
 };
 
-var app_three_config = {
+var taxonomy_config = {
     'hybridge': null,
     'general': config,
-    'window': {'page': 'app_three.html',
+    'window': {'page': 'taxonomy.html',
                'tout': 5000 }
 };
 
-config.apps = {'app_one': new app_one(app_one_config),
-               'app_two': new app_two(app_two_config),
-               'app_three': new app_three(app_three_config)
+config.apps = {'ipt': new ipt(ipt_config),
+               'taxtweb': new taxtweb(taxtweb_config),
+               'taxonomy': new taxonomy(taxonomy_config)
               };
 
 

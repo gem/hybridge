@@ -1,6 +1,6 @@
 /**
  *
- * @source: hybridge (chrome) app_one.js
+ * @source: hybridge (chrome) ipt.js
  * @author: Matteo Nastasi <nastasi@alternativeoutout.it>
  * @link: https://github.com/nastasi/hybridge
  *
@@ -81,7 +81,7 @@ AppWeb.prototype = {
 
     /* this function is called when a malformed message is received */
     on_notstd_msg_cb: function(msg) {
-        console.log("client app_one received:");
+        console.log("client ipt received:");
         console.log(msg);
     },
 
