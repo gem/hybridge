@@ -18,6 +18,7 @@ uuid_js = open('uuid-random.min.js').read()
 ipt_content = open('ipt.html').read()
 taxtweb_content = open('taxtweb.html').read()
 taxonomy_content = open('taxonomy.html').read()
+apptest_content = open('apptest.html').read()
 hybridge_key_js = open('hybridge_key.js').read()
 hybridge_js = open('hybridge.js').read()
 app_web_js = open('app_web.js').read()
@@ -43,6 +44,11 @@ class UuidJS(tornado.web.RequestHandler):
 class IptPage(tornado.web.RequestHandler):
     def get(self):
         self.write(ipt_content)
+
+
+class AppTestPage(tornado.web.RequestHandler):
+    def get(self):
+        self.write(apptest_content)
 
 
 class ExtApp:
@@ -247,6 +253,7 @@ if __name__ == "__main__":
             (r'/app_web.js', AppWebJS),
             (r'/taxtweb.html', TaxtwebPage),
             (r'/taxonomy.html', TaxonomyPage),
+            (r'/apptest.html', AppTestPage),
             (r'/index.js', HomeJS),
             (r'/', HomePage),
         ])
