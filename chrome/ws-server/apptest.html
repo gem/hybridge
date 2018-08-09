@@ -42,6 +42,8 @@
       <td><button id="to-hybridge-btn" type="button">TO HYBRIDGE</button></td>
     </tr>
   </table>
+  <div id="results">
+  </div>
 </div>
 </body>
 <script>
@@ -60,6 +62,60 @@ window.onload = function window_onload() {
             console.log("FIRED CMD WITH UUID: " + uu);
         }
     );
+    function custom_on_cmd_cb(uu, msg) {
+        var content = document.getElementById("results");
+        content.innerHTML += '<br>';
+        content.innerHTML += uu;
+        content.innerHTML += ': &nbsp';
+        content.innerHTML += JSON.stringify(msg);
+        console.log(msg);
+    }
+    setTimeout(function(){
+        var uu = app_web.send({'command': 'ext_app_open', 'args': ['Testing']},
+                              custom_on_cmd_cb);
+        app_web.send({'command': 'clear_ipt_dir', 'args': []},
+                     custom_on_cmd_cb);
+    }, 500);
+    setTimeout(function(){
+        var uu = app_web.send({'command': 'on_same_fs', 'args': []},
+                              custom_on_cmd_cb);
+    }, 1000);
+    <!-- setTimeout(function(){ -->
+    <!--     app_web.send({'command': 'run_oq_engine_calc', 'args': [['ScenarioHazard.zip']]}, -->
+    <!--                  custom_on_cmd_cb); -->
+    <!-- }, 1000); -->
+    setTimeout(function(){
+        app_web.send({'command': 'save_str_to_file', 'args': ['this is the content', 'test.txt']},
+                                custom_on_cmd_cb);
+        setTimeout(function(){
+            app_web.send({'command': 'ls_ipt_dir', 'args': []},
+                         custom_on_cmd_cb);
+            app_web.send({'command': 'rename_file_in_ipt_dir', 'args': ['test.txt', 'test_renamed.txt']},
+                         custom_on_cmd_cb);
+            setTimeout(function(){
+                app_web.send({'command': 'ls_ipt_dir', 'args': []},
+                             custom_on_cmd_cb);
+                app_web.send({'command': 'rm_file_from_ipt_dir', 'args': ['test_renamed.txt']},
+                             custom_on_cmd_cb);
+                setTimeout(function(){
+                    app_web.send({'command': 'ls_ipt_dir', 'args': []},
+                                 custom_on_cmd_cb);
+                }, 1000);
+            }, 1000);
+        }, 1000);
+    }, 1000);
+    <!-- setTimeout(function(){ -->
+    <!--     app_web.send({'command': 'select_and_copy_files_to_ipt_dir', 'args': []}, -->
+    <!--                  custom_on_cmd_cb); -->
+    <!-- }, 1000); -->
+    <!-- setTimeout(function(){ -->
+    <!--     app_web.send({'command': 'select_file', 'args': []}, -->
+    <!--                  custom_on_cmd_cb); -->
+    <!-- }, 1000); -->
+    <!-- setTimeout(function(){ -->
+    <!--     app_web.send({'command': 'select_files', 'args': []}, -->
+    <!--                  custom_on_cmd_cb); -->
+    <!-- }, 1000); -->
 }
   </script>
 </html>
