@@ -103,6 +103,11 @@ window.onload = function window_onload() {
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
+        var cmd = {'command': 'read_file_in_ipt_dir', 'args': ['test.txt']};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    setTimeout(function(){
         var cmd = {'command': 'ls_ipt_dir', 'args': []};
         var ret = app_web.send(cmd, custom_on_cmd_cb);
         custom_on_cmd_cb(ret, cmd);
@@ -150,8 +155,6 @@ window.onload = function window_onload() {
         custom_on_cmd_cb(ret, cmd);
     }, time_cur);
     time_cur += time_delta;
-
-    <!-- TODO: get the content of a file in the ipt_dir, given the filename -->
 }
   </script>
 </html>
