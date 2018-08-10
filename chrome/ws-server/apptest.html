@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>AppTest</title>
+  <title>GenericApi Test</title>
   <script src="uuid-random.min.js"></script>
   <script src="hybridge_key.js"></script>
   <script src="hybridge.js"></script>
@@ -27,7 +27,7 @@
 </head>
 <body>
 <div>
-  <h1>AppTest</h1>
+  <h1>GenericApi Test</h1>
   <table class="tab">
     <tr><th>ext-app linked</th>
       <td colspan=2 id="ext_app_linked"><div id="track">0</div></td>
@@ -78,79 +78,10 @@ window.onload = function window_onload() {
         custom_on_cmd_cb(ret, cmd);
     }, time_cur);
     time_cur += time_delta;
-    setTimeout(function(){
-        var cmd = {'command': 'clear_ipt_dir', 'args': []};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
-    }, time_cur);
-    time_cur += time_delta;
-    setTimeout(function(){
-        var cmd = {'command': 'on_same_fs', 'args': []};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
-    }, time_cur);
-    time_cur += time_delta;
-    setTimeout(function(){
-        var cmd = {'command': 'run_oq_engine_calc', 'args': [['ScenarioHazard.zip']]};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
-    }, time_cur);
-    time_cur += time_delta;
-    setTimeout(function(){
-        var cmd = {'command': 'save_str_to_file', 'args': ['this is the content', 'test.txt']};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
-    }, time_cur);
-    time_cur += time_delta;
-    setTimeout(function(){
-        var cmd = {'command': 'read_file_in_ipt_dir', 'args': ['test.txt']};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
-    }, time_cur);
+
+    <!-- The following should not be allowed, because it's ipt-specific -->
     setTimeout(function(){
         var cmd = {'command': 'ls_ipt_dir', 'args': []};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
-    }, time_cur);
-    time_cur += time_delta;
-    setTimeout(function(){
-        var cmd = {'command': 'rename_file_in_ipt_dir', 'args': ['test.txt', 'test_renamed.txt']};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
-    }, time_cur);
-    time_cur += time_delta;
-    setTimeout(function(){
-        var cmd = {'command': 'ls_ipt_dir', 'args': []};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
-    }, time_cur);
-    time_cur += time_delta;
-    setTimeout(function(){
-        var cmd = {'command': 'rm_file_from_ipt_dir', 'args': ['test_renamed.txt']};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
-    }, time_cur);
-    time_cur += time_delta;
-    setTimeout(function(){
-        var cmd = {'command': 'ls_ipt_dir', 'args': []};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
-    }, time_cur);
-    time_cur += time_delta;
-    setTimeout(function(){
-        var cmd = {'command': 'select_and_copy_files_to_ipt_dir', 'args': []};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
-    }, time_cur);
-    time_cur += time_delta;
-    setTimeout(function(){
-        var cmd = {'command': 'select_file', 'args': []};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
-    }, time_cur);
-    time_cur += time_delta;
-    setTimeout(function(){
-        var cmd = {'command': 'select_files', 'args': []};
         var ret = app_web.send(cmd, custom_on_cmd_cb);
         custom_on_cmd_cb(ret, cmd);
     }, time_cur);
