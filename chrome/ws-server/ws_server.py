@@ -19,7 +19,6 @@ ipt_content = open('ipt.html').read()
 taxtweb_content = open('taxtweb.html').read()
 taxonomy_content = open('taxonomy.html').read()
 apptest_content = open('apptest.html').read()
-# ipt_test_content = open('ipt_test.html').read()
 hybridge_key_js = open('hybridge_key.js').read()
 hybridge_js = open('hybridge.js').read()
 app_web_js = open('app_web.js').read()
@@ -50,11 +49,6 @@ class IptPage(tornado.web.RequestHandler):
 class AppTestPage(tornado.web.RequestHandler):
     def get(self):
         self.write(apptest_content)
-
-
-# class IptTestPage(tornado.web.RequestHandler):
-#     def get(self):
-#         self.write(ipt_test_content)
 
 
 class ExtApp:
@@ -262,7 +256,6 @@ if __name__ == "__main__":
             (r'/taxtweb.html', TaxtwebPage),
             (r'/taxonomy.html', TaxonomyPage),
             (r'/apptest.html', AppTestPage),
-            # (r'/ipt_test.html', IptTestPage),
             (r'/index.js', HomeJS),
             (r'/', HomePage),
         ])

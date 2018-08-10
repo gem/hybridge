@@ -97,39 +97,6 @@ apptest.prototype = {
     }
 }
 
-// function ipt_test(config) {
-//     console.log('ipt_test initialization');
-//     console.log(config);
-//     this.config = config;
-//     this.name = 'ipt';
-// }
-
-// ipt_test.prototype = {
-//     hybridge: null,
-//     name: null,
-//     port: null,
-//     port_close_cbs: {},
-//     // TODO: symbolic routing: key: *, 'to' as 'other'
-//     routes: {'ext': {'set_cells': {'to': 'web'}},
-//              'web': {'ext_app_open': {'to': 'ext'},
-//                      'select_file': {'to': 'ext'},
-//                      'select_files': {'to': 'ext'},
-//                      'ls_ipt_dir': {'to': 'ext'},
-//                      'clear_ipt_dir': {'to': 'ext'},
-//                      'on_same_fs': {'to': 'ext'},
-//                      'rm_file_from_ipt_dir': {'to': 'ext'},
-//                      'rename_file_in_ipt_dir': {'to': 'ext'},
-//                      'run_oq_engine_calc': {'to': 'ext'},
-//                      'save_str_to_file': {'to': 'ext'},
-//                      'read_file_in_ipt_dir': {'to': 'ext'},
-//                      'select_and_copy_files_to_ipt_dir': {'to': 'ext'},
-//                     }
-//             },
-
-//     register: function(hybridge) {
-//         this.hybridge = hybridge;
-//     }
-// }
 
 function taxtweb(config) {
     console.log('taxtweb initialization');
@@ -225,18 +192,10 @@ var apptest_config = {
                'tout': 5000 }
 };
 
-// var ipt_test_config = {
-//     'hybridge': null,
-//     'general': config,
-//     'window': {'page': 'ipt_test.html',
-//                'tout': 5000 }
-// };
-
 config.apps = {'ipt': new ipt(ipt_config),
                'taxtweb': new taxtweb(taxtweb_config),
                'taxonomy': new taxonomy(taxonomy_config),
                'apptest': new apptest(apptest_config),
-               // 'ipt_test': new ipt_test(ipt_test_config)
               };
 
 
