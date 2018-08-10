@@ -222,6 +222,11 @@ HyBridge.prototype = {
     ws_is_connect: false,
     ws_status_cbs: {},
     watchdog_handle: null,
+
+    is_connected: function() {
+        return this.ws_is_connect;
+    },
+
     ws_connect: function() {
         var _this = this;
 
@@ -297,7 +302,7 @@ HyBridge.prototype = {
         app.port_close_cbs[hyb_msg.msg.uuid] = function ws_status_cbs_cleaner(uuid) {
             delete _this.ws_status_cbs[uuid];
         };
-        track_status_cb(this.ws != null);
+        track_status_cb(this.ws_is_connect);
     },
     run: function () {
         var _this = this;
@@ -312,6 +317,19 @@ function main()
 {
     hybridge = new HyBridge(config);
     hybridge.run()
+
+    chrome.webRequest.onBeforeSendHeaders.addListener(
+        function(details) {
+            if (hybridge.is_connected()) {
+                details.requestHeaders.push({'name': 'Gem-Header-Name',
+                                             'value': 'Gem--Qgis-Oq-Irmt'});
+                details.requestHeaders.push({'name': 'Gem-Header-Value',
+                                             'value': '0.2.0'});
+            }
+            return {requestHeaders: details.requestHeaders};
+        },
+        {urls: ["*://localhost/*"]}, // URL FILTERS
+        ["blocking", "requestHeaders"]);
 
     chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
         console.log("inside message !: [" + message.msg + "]");
