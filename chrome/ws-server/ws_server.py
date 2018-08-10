@@ -6,8 +6,14 @@ import tornado.httpserver
 import tornado.websocket
 import tornado.ioloop
 import tornado.web
+
+import logging
+
 from uuid import uuid4
 import json
+
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+logging.info('init')
 
 #
 #  Remote Server emulation
@@ -43,6 +49,7 @@ class UuidJS(tornado.web.RequestHandler):
 
 class IptPage(tornado.web.RequestHandler):
     def get(self):
+        logging.info(self.request.headers)
         self.write(ipt_content)
 
 
