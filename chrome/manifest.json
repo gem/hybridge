@@ -6,14 +6,18 @@
 
     "description": "Generic application-browser bridge interface.",
 
+    "options_page": "options.html",
     "browser_action": {
         "default_icon": {
-            "48": "icons/icon.png"
+            "16": "icons/oq-icon16.png",
+            "32": "icons/oq-icon32.png",
+            "48": "icons/oq-icon48.png",
+            "128": "icons/oq-icon128.png"
         }
     },
     "background": {
-        "scripts": ["background_commons.js", "background_apps.js",
-                    "background.js"],
+        "scripts": ["options_defaults.js", "background_commons.js",
+                    "background_apps.js", "background.js"],
         "persistent": true
     },
     "content_scripts": [
@@ -27,6 +31,7 @@
     },
     "permissions": [
         "*://localhost/*", // URL FILTERS
+        "storage",
         "activeTab",
         "webRequest",
         "webRequestBlocking"

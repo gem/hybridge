@@ -313,8 +313,12 @@ HyBridge.prototype = {
     }
 }
 
-function main()
+var opts = {'base_url': '', 'is_deveĺ': 'false'};
+
+function main(opts)
 {
+    config = config_apps(opts);
+
     hybridge = new HyBridge(config);
     hybridge.run()
 
@@ -365,7 +369,21 @@ function main()
     });
 }
 
-main();
+function options_get(opts, cb) {
+    chrome.storage.local.get(['base_url', 'is_devel'], function(ret) {
+        if (ret.base_url === undefined)
+            opts.base_url = base_url_default;
+        else
+            opts.base_url = decodeURI(ret.base_url);
+        if (ret.is_devel === undefined)
+            opts.is_devel = is_devel_default;
+        else
+            opts.is_devel = ret.is_devel;
+        cb(opts);
+    });
+}
+
+options_get(opts, main);
 
 console.log("background.js: end");
 

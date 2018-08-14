@@ -255,14 +255,34 @@ if __name__ == "__main__":
         server_port = 8010
     elif sys.argv[1] == '--application':
         application = tornado.web.Application([
-            (r'/uuid-random.min.js', UuidJS),
-            (r'/hybridge_key.js', HyBridgeKeyJS),
-            (r'/hybridge.js', HyBridgeJS),
-            (r'/ipt.html', IptPage),
-            (r'/app_web.js', AppWebJS),
-            (r'/taxtweb.html', TaxtwebPage),
-            (r'/taxonomy.html', TaxonomyPage),
-            (r'/apptest.html', AppTestPage),
+            (r'/ipt/', IptPage),
+            (r'/ipt/uuid-random.min.js', UuidJS),
+            (r'/ipt/hybridge_key.js', HyBridgeKeyJS),
+            (r'/ipt/hybridge.js', HyBridgeJS),
+            (r'/ipt/uuid-random.min.js', UuidJS),
+            (r'/ipt/app_web.js', AppWebJS),
+
+            (r'/taxtweb/', TaxtwebPage),
+            (r'/taxtweb/uuid-random.min.js', UuidJS),
+            (r'/taxtweb/hybridge_key.js', HyBridgeKeyJS),
+            (r'/taxtweb/hybridge.js', HyBridgeJS),
+            (r'/taxtweb/uuid-random.min.js', UuidJS),
+            (r'/taxtweb/app_web.js', AppWebJS),
+
+            (r'/taxonomy/', TaxonomyPage),
+            (r'/taxonomy/uuid-random.min.js', UuidJS),
+            (r'/taxonomy/hybridge_key.js', HyBridgeKeyJS),
+            (r'/taxonomy/hybridge.js', HyBridgeJS),
+            (r'/taxonomy/uuid-random.min.js', UuidJS),
+            (r'/taxonomy/app_web.js', AppWebJS),
+
+            (r'/apptest/', AppTestPage),
+            (r'/apptest/uuid-random.min.js', UuidJS),
+            (r'/apptest/hybridge_key.js', HyBridgeKeyJS),
+            (r'/apptest/hybridge.js', HyBridgeJS),
+            (r'/apptest/uuid-random.min.js', UuidJS),
+            (r'/apptest/app_web.js', AppWebJS),
+
             (r'/index.js', HomeJS),
             (r'/', HomePage),
         ])

@@ -36,7 +36,7 @@ console.log("background_apps.js: begin");
 function ipt(config) {
     console.log('ipt initialization');
     console.log(config);
-    this.window = new window_feat(config, "ipt.html", 5000);
+    this.window = new window_feat(config, "ipt/", 5000);
     this.config = config;
     this.name = 'ipt';
 }
@@ -101,7 +101,7 @@ apptest.prototype = {
 function taxtweb(config) {
     console.log('taxtweb initialization');
     console.log(config);
-    this.window = new window_feat(config, "taxtweb.html", 5000);
+    this.window = new window_feat(config, "taxtweb/", 5000);
     this.config = config;
     this.name = 'taxtweb';
 }
@@ -130,7 +130,7 @@ taxtweb.prototype = {
 function taxonomy(config) {
     console.log('taxonomy initialization');
     console.log(config);
-    this.window = new window_feat(config, "taxonomy.html", 5000);
+    this.window = new window_feat(config, "taxonomy/", 5000);
     this.config = config;
     this.name = 'taxonomy';
 }
@@ -155,48 +155,53 @@ taxonomy.prototype = {
     }
 }
 
+function config_apps(opts) {
+    var config = {
+        'application_url': 'localhost:8000/',
+        'server_url': opts.base_url,
+        'ws_address': '',
+        'is_secure': false,
+        'apps': null
+    }
 
-var config = {
-    application_url: "localhost:8000/",
-    server_url: "localhost:8040/",
-    ws_address: "",
-    is_secure: false,
-    apps: null
+    var ipt_config = {
+        'hybridge': null,
+        'general': config,
+        'window': {'page': 'ipt/',
+                   'tout': 5000 }
+    };
+
+    var taxtweb_config = {
+        'hybridge': null,
+        'general': config,
+        'window': {'page': 'taxtweb/',
+                   'tout': 5000 }
+    };
+
+    var taxonomy_config = {
+        'hybridge': null,
+        'general': config,
+        'window': {'page': 'taxonomy/',
+                   'tout': 5000 }
+    };
+
+    if (opts.is_devel == 'true') {
+        var apptest_config = {
+            'hybridge': null,
+            'general': config,
+            'window': {'page': 'apptest/',
+                       'tout': 5000 }
+        };
+    }
+
+    config.apps = {'ipt': new ipt(ipt_config),
+                   'taxtweb': new taxtweb(taxtweb_config),
+                   'taxonomy': new taxonomy(taxonomy_config)
+                  }
+    if (opts.is_devel == 'true') {
+        config.apps['apptest'] = new apptest(apptest_config);
+    }
+    return config;
 }
-
-var ipt_config = {
-    'hybridge': null,
-    'general': config,
-    'window': {'page': 'ipt.html',
-               'tout': 5000 }
-};
-
-var taxtweb_config = {
-    'hybridge': null,
-    'general': config,
-    'window': {'page': 'taxtweb.html',
-               'tout': 5000 }
-};
-
-var taxonomy_config = {
-    'hybridge': null,
-    'general': config,
-    'window': {'page': 'taxonomy.html',
-               'tout': 5000 }
-};
-
-var apptest_config = {
-    'hybridge': null,
-    'general': config,
-    'window': {'page': 'apptest.html',
-               'tout': 5000 }
-};
-
-config.apps = {'ipt': new ipt(ipt_config),
-               'taxtweb': new taxtweb(taxtweb_config),
-               'taxonomy': new taxonomy(taxonomy_config),
-               'apptest': new apptest(apptest_config),
-              };
-
 
 console.log("background_apps.js: end");
