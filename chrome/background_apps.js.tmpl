@@ -96,6 +96,11 @@ apptest.prototype = {
 
     register: function(hybridge) {
         this.hybridge = hybridge;
+    },
+
+    window_open: function() {
+        this.window.open();
+        return {'success': true};
     }
 }
 
