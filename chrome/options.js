@@ -34,7 +34,7 @@ function options_manager() {
     
     btn_save.addEventListener('click', function() {
         chrome.storage.local.set({'base_url': encodeURI(base_url.value)});
-        chrome.storage.local.set({'is_devel': is_devel.checked ? "yes" : "no"});
+        chrome.storage.local.set({'is_devel': is_devel.checked ? "true" : "false"});
 
         chrome.extension.getBackgroundPage().window.location.reload();
     });
