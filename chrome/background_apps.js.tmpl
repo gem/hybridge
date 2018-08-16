@@ -77,6 +77,7 @@ ipt.prototype = {
 function apptest(config) {
     console.log('apptest initialization');
     console.log(config);
+    this.window = new window_feat(config, "apptest/", 5000);
     this.config = config;
     this.name = 'apptest';
 }
@@ -87,7 +88,8 @@ apptest.prototype = {
     port: null,
     port_close_cbs: {},
     // TODO: symbolic routing: key: *, 'to' as 'other'
-    routes: {'ext': {'set_cells': {'to': 'web'}},
+    routes: {'ext': {'window_open': {'to': 'bridge'},
+                     'set_cells': {'to': 'web'}},
              'web': {'ext_app_open': {'to': 'ext'},
                     }
             },

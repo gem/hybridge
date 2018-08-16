@@ -19,6 +19,13 @@ function run_command(app, command)
 
 
 window.onload = function() {
+    document.getElementById("apptest").addEventListener(
+        "click",
+        function() {
+            run_command('apptest', 'window_open');
+            console.log("Fire a command to command page");
+        }
+    );
     document.getElementById("ipt").addEventListener(
         "click",
         function() {
