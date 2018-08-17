@@ -171,19 +171,6 @@ function config_apps(opts) {
         'apps': null
     }
 
-    var taxtweb_config = {
-        'hybridge': null,
-        'general': config,
-        'window': {'page': 'taxtweb/',
-                   'tout': 5000 }
-    };
-    var taxonomy_config = {
-        'hybridge': null,
-        'general': config,
-        'window': {'page': 'taxonomy/',
-                   'tout': 5000 }
-    };
-
     if (opts.is_devel == 'true') {
         var apptest_config = {
             'hybridge': null,
@@ -197,18 +184,18 @@ function config_apps(opts) {
             'window': {'page': 'ipt_test/',
                        'tout': 5000 }
         }
-        // var taxtweb_config = {
-        //     'hybridge': null,
-        //     'general': config,
-        //     'window': {'page': 'taxtweb_test/',
-        //                'tout': 5000 }
-        // };
-        // var taxonomy_config = {
-        //     'hybridge': null,
-        //     'general': config,
-        //     'window': {'page': 'taxonomy_test/',
-        //                'tout': 5000 }
-        // };
+        var taxtweb_config = {
+            'hybridge': null,
+            'general': config,
+            'window': {'page': 'taxtweb_test/',
+                       'tout': 5000 }
+        };
+        var taxonomy_config = {
+            'hybridge': null,
+            'general': config,
+            'window': {'page': 'taxonomy_test/',
+                       'tout': 5000 }
+        };
     } else {
         var ipt_config = {
             'hybridge': null,
@@ -216,18 +203,18 @@ function config_apps(opts) {
             'window': {'page': 'ipt/',
                        'tout': 5000 }
         };
-        // var taxtweb_config = {
-        //     'hybridge': null,
-        //     'general': config,
-        //     'window': {'page': 'taxtweb/',
-        //                'tout': 5000 }
-        // };
-        // var taxonomy_config = {
-        //     'hybridge': null,
-        //     'general': config,
-        //     'window': {'page': 'taxonomy/',
-        //                'tout': 5000 }
-        // };
+        var taxtweb_config = {
+            'hybridge': null,
+            'general': config,
+            'window': {'page': 'taxtweb/',
+                       'tout': 5000 }
+        };
+        var taxonomy_config = {
+            'hybridge': null,
+            'general': config,
+            'window': {'page': 'taxonomy/',
+                       'tout': 5000 }
+        };
     };
 
 

@@ -24,7 +24,9 @@ uuid_js = open('uuid-random.min.js').read()
 ipt_content = open('ipt.html').read()
 ipt_test_content = open('ipt_test.html').read()
 taxtweb_content = open('taxtweb.html').read()
+taxtweb_test_content = open('taxtweb_test.html').read()
 taxonomy_content = open('taxonomy.html').read()
+taxonomy_test_content = open('taxonomy_test.html').read()
 apptest_content = open('apptest.html').read()
 hybridge_key_js = open('hybridge_key.js').read()
 hybridge_js = open('hybridge.js').read()
@@ -58,6 +60,26 @@ class IptTestPage(tornado.web.RequestHandler):
     def get(self):
         logging.info(self.request.headers)
         self.write(ipt_test_content)
+
+
+class TaxtwebPage(tornado.web.RequestHandler):
+    def get(self):
+        self.write(taxtweb_content)
+
+
+class TaxtwebTestPage(tornado.web.RequestHandler):
+    def get(self):
+        self.write(taxtweb_test_content)
+
+
+class TaxonomyPage(tornado.web.RequestHandler):
+    def get(self):
+        self.write(taxonomy_content)
+
+
+class TaxonomyTestPage(tornado.web.RequestHandler):
+    def get(self):
+        self.write(taxonomy_test_content)
 
 
 class AppTestPage(tornado.web.RequestHandler):
@@ -139,16 +161,6 @@ class HyBridgeJS(tornado.web.RequestHandler):
 class HyBridgeKeyJS(tornado.web.RequestHandler):
     def get(self):
         self.write(hybridge_key_js)
-
-
-class TaxtwebPage(tornado.web.RequestHandler):
-    def get(self):
-        self.write(taxtweb_content)
-
-
-class TaxonomyPage(tornado.web.RequestHandler):
-    def get(self):
-        self.write(taxonomy_content)
 
 
 #
@@ -247,13 +259,17 @@ if __name__ == "__main__":
         ipt = ExtApp('ipt', 'cyan')
         ipt_test = ExtApp('ipt', 'cyan')
         taxtweb = ExtApp('taxtweb', 'pink')
+        taxtweb_test = ExtApp('taxtweb', 'pink')
         taxonomy = ExtApp('taxonomy', 'lightgreen')
+        taxonomy_test = ExtApp('taxonomy', 'lightgreen')
 
         apps = {
             'ipt': ipt,
             'ipt_test': ipt_test,
             'taxtweb': taxtweb,
-            'taxonomy': taxonomy
+            'taxtweb_test': taxtweb_test,
+            'taxonomy': taxonomy,
+            'taxonomy_test': taxonomy_test
         }
 
         application = tornado.web.Application([
@@ -285,12 +301,26 @@ if __name__ == "__main__":
             (r'/taxtweb/uuid-random.min.js', UuidJS),
             (r'/taxtweb/app_web.js', AppWebJS),
 
+            (r'/taxtweb_test/', TaxtwebTestPage),
+            (r'/taxtweb_test/uuid-random.min.js', UuidJS),
+            (r'/taxtweb_test/hybridge_key.js', HyBridgeKeyJS),
+            (r'/taxtweb_test/hybridge.js', HyBridgeJS),
+            (r'/taxtweb_test/uuid-random.min.js', UuidJS),
+            (r'/taxtweb_test/app_web.js', AppWebJS),
+
             (r'/taxonomy/', TaxonomyPage),
             (r'/taxonomy/uuid-random.min.js', UuidJS),
             (r'/taxonomy/hybridge_key.js', HyBridgeKeyJS),
             (r'/taxonomy/hybridge.js', HyBridgeJS),
             (r'/taxonomy/uuid-random.min.js', UuidJS),
             (r'/taxonomy/app_web.js', AppWebJS),
+
+            (r'/taxonomy_test/', TaxonomyTestPage),
+            (r'/taxonomy_test/uuid-random.min.js', UuidJS),
+            (r'/taxonomy_test/hybridge_key.js', HyBridgeKeyJS),
+            (r'/taxonomy_test/hybridge.js', HyBridgeJS),
+            (r'/taxonomy_test/uuid-random.min.js', UuidJS),
+            (r'/taxonomy_test/app_web.js', AppWebJS),
 
             (r'/apptest/', AppTestPage),
             (r'/apptest/uuid-random.min.js', UuidJS),
