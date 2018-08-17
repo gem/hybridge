@@ -1,0 +1,160 @@
+<html>
+<head>
+  <title>IPT</title>
+  <script src="uuid-random.min.js"></script>
+  <script src="hybridge_key.js"></script>
+  <script src="hybridge.js"></script>
+  <script src="app_web.js"></script>
+  <style>
+    .tab {
+    border-collapse: collapse;
+    }
+    .tab td, th {
+    padding: 8px;
+    }
+
+    .tab td {
+    border: 1px solid gray;
+    }
+
+    div#track {
+    margin: 4px;
+    padding: 4px;
+    text-align: center;
+    background-color: orange;
+    }
+  </style>
+</head>
+<body>
+<div>
+  <h1>IPT Test</h1>
+  <table class="tab">
+    <tr><th>ext-app linked</th>
+      <td colspan=2 id="ext_app_linked"><div id="track">0</div></td>
+      </tr>
+    <tr><th>from hybridge</th>
+      <td id="arg-a"></td>
+      <td id="arg-b"></td>
+    </tr>
+    <tr>
+      <th>to hybridge</th>
+      <td><input type="text" id="to-hybridge-txt"></td>
+      <td><button id="to-hybridge-btn" type="button">TO HYBRIDGE</button></td>
+    </tr>
+  </table>
+  <div id="results">
+  </div>
+</div>
+</body>
+<script>
+var app_web;
+
+window.onload = function window_onload() {
+    app_web = new AppWeb('ipt');
+
+    document.getElementById("to-hybridge-btn").addEventListener(
+        "click",
+        function() {
+            console.log('send msg');
+            var arg = document.getElementById("to-hybridge-txt").value;
+            var uu = app_web.send({'command': 'ext_app_open', 'args': [arg]},
+                                  on_cmd_cb);
+            console.log("FIRED CMD WITH UUID: " + uu);
+        }
+    );
+    function custom_on_cmd_cb(uu, msg) {
+        var content = document.getElementById("results");
+        content.innerHTML += '<br>';
+        content.innerHTML += uu;
+        content.innerHTML += ': &nbsp';
+        content.innerHTML += JSON.stringify(msg);
+        console.log(msg);
+    }
+    var time_cur = 0;
+    var time_delta = 500;
+    setTimeout(function(){
+        var cmd = {'command': 'ext_app_open', 'args': ['Testing']};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
+    setTimeout(function(){
+        var cmd = {'command': 'clear_ipt_dir', 'args': []};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
+    setTimeout(function(){
+        var cmd = {'command': 'on_same_fs', 'args': []};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
+    setTimeout(function(){
+        var cmd = {'command': 'run_oq_engine_calc', 'args': [['ScenarioHazard.zip']]};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
+    setTimeout(function(){
+        var cmd = {'command': 'save_str_to_file', 'args': ['this is the content', 'test.txt']};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
+    setTimeout(function(){
+        var cmd = {'command': 'read_file_in_ipt_dir', 'args': ['test.txt']};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    setTimeout(function(){
+        var cmd = {'command': 'ls_ipt_dir', 'args': []};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
+    setTimeout(function(){
+        var cmd = {'command': 'rename_file_in_ipt_dir', 'args': ['test.txt', 'test_renamed.txt']};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
+    setTimeout(function(){
+        var cmd = {'command': 'ls_ipt_dir', 'args': []};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
+    setTimeout(function(){
+        var cmd = {'command': 'rm_file_from_ipt_dir', 'args': ['test_renamed.txt']};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
+    setTimeout(function(){
+        var cmd = {'command': 'ls_ipt_dir', 'args': []};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
+    setTimeout(function(){
+        var cmd = {'command': 'select_and_copy_files_to_ipt_dir', 'args': []};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
+    setTimeout(function(){
+        var cmd = {'command': 'select_file', 'args': []};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
+    setTimeout(function(){
+        var cmd = {'command': 'select_files', 'args': []};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
+}
+  </script>
+</html>

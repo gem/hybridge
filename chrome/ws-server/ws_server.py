@@ -22,6 +22,7 @@ home_content = open('index.html').read()
 home_js = open('index.js').read()
 uuid_js = open('uuid-random.min.js').read()
 ipt_content = open('ipt.html').read()
+ipt_test_content = open('ipt_test.html').read()
 taxtweb_content = open('taxtweb.html').read()
 taxonomy_content = open('taxonomy.html').read()
 apptest_content = open('apptest.html').read()
@@ -51,6 +52,12 @@ class IptPage(tornado.web.RequestHandler):
     def get(self):
         logging.info(self.request.headers)
         self.write(ipt_content)
+
+
+class IptTestPage(tornado.web.RequestHandler):
+    def get(self):
+        logging.info(self.request.headers)
+        self.write(ipt_test_content)
 
 
 class AppTestPage(tornado.web.RequestHandler):
@@ -238,11 +245,13 @@ if __name__ == "__main__":
 
     if sys.argv[1] == '--server':
         ipt = ExtApp('ipt', 'cyan')
+        ipt_test = ExtApp('ipt', 'cyan')
         taxtweb = ExtApp('taxtweb', 'pink')
         taxonomy = ExtApp('taxonomy', 'lightgreen')
 
         apps = {
             'ipt': ipt,
+            'ipt_test': ipt_test,
             'taxtweb': taxtweb,
             'taxonomy': taxonomy
         }
@@ -261,6 +270,13 @@ if __name__ == "__main__":
             (r'/ipt/hybridge.js', HyBridgeJS),
             (r'/ipt/uuid-random.min.js', UuidJS),
             (r'/ipt/app_web.js', AppWebJS),
+
+            (r'/ipt_test/', IptTestPage),
+            (r'/ipt_test/uuid-random.min.js', UuidJS),
+            (r'/ipt_test/hybridge_key.js', HyBridgeKeyJS),
+            (r'/ipt_test/hybridge.js', HyBridgeJS),
+            (r'/ipt_test/uuid-random.min.js', UuidJS),
+            (r'/ipt_test/app_web.js', AppWebJS),
 
             (r'/taxtweb/', TaxtwebPage),
             (r'/taxtweb/uuid-random.min.js', UuidJS),
