@@ -325,9 +325,7 @@ function main(opts)
     chrome.webRequest.onBeforeSendHeaders.addListener(
         function(details) {
             if (hybridge.is_connected()) {
-                details.requestHeaders.push({'name': 'Gem-Header-Name',
-                                             'value': 'Gem--Qgis-Oq-Irmt'});
-                details.requestHeaders.push({'name': 'Gem-Header-Value',
+                details.requestHeaders.push({'name': 'Gem--Qgis-Oq-Irmt',
                                              'value': '0.2.0'});
             }
             return {requestHeaders: details.requestHeaders};
