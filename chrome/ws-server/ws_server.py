@@ -51,6 +51,10 @@ class UuidJS(tornado.web.RequestHandler):
 
 
 class IptPage(tornado.web.RequestHandler):
+    def post(self):
+        logging.info(self.request.headers)
+        self.write(ipt_content)
+
     def get(self):
         logging.info(self.request.headers)
         self.write(ipt_content)
