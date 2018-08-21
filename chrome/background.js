@@ -94,7 +94,15 @@ Router.prototype = {
             this.pendings[api_msg.uuid] = {'route': route, 'msg': hyb_msg};
 
             if (cmd_name === undefined || route === undefined) {
-                console.log('malformed message: ' + cmd_name);
+                if (cmd_name === undefined) {
+                    console.log('unknown command: ' + cmd_name);
+                }
+                else if (route === undefined) {
+                    console.log('route not specified for command: ' + cmd_name);
+                }
+                else {
+                    console.log('unknown failure reason for command: ' + cmd_name);
+                }
                 console.log(hyb_msg);
                 delete this.pendings[api_msg.uuid];
                 return false;
