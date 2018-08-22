@@ -91,7 +91,12 @@ apptest.prototype = {
     // TODO: symbolic routing: key: *, 'to' as 'other'
     routes: {'ext': {'window_open': {'to': 'bridge'},
                      'set_cells': {'to': 'web'}},
-             'web': {'ext_app_open': {'to': 'ext'},
+             'web': {
+                     'ext_app_open': {'to': 'ext'},
+                     'notify_click': {'to': 'ext'},
+                     'info': {'to': 'ext'},
+                     'warning': {'to': 'ext'},
+                     'error': {'to': 'ext'},
                     }
             },
 

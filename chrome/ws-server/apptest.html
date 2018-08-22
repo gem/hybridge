@@ -78,6 +78,30 @@ window.onload = function window_onload() {
         custom_on_cmd_cb(ret, cmd);
     }, time_cur);
     time_cur += time_delta;
+    setTimeout(function(){
+        var cmd = {'command': 'notify_click', 'args': []};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
+    setTimeout(function(){
+        var cmd = {'command': 'info', 'args': ['Testing info message']};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
+    setTimeout(function(){
+        var cmd = {'command': 'warning', 'args': ['Testing warning message']};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
+    setTimeout(function(){
+        var cmd = {'command': 'error', 'args': ['Testing error message']};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
 
     <!-- The following should not be allowed, because it's ipt-specific -->
     setTimeout(function(){
