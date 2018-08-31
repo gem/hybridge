@@ -277,11 +277,11 @@ if __name__ == "__main__":
         }
 
         application = tornado.web.Application([
-            (r'/websocketserver', WebSocketServer),
+            (r'/', WebSocketServer),
             (r'/command.html', CommandPage),
             (r'/command.js', CommandJS),
         ])
-        server_port = 8010
+        server_port = 8040
     elif sys.argv[1] == '--application':
         application = tornado.web.Application([
             (r'/ipt/', IptPage),
@@ -336,7 +336,7 @@ if __name__ == "__main__":
             (r'/index.js', HomeJS),
             (r'/', HomePage),
         ])
-        server_port = 8040
+        server_port = 8060
     else:
         usage(2)
 
