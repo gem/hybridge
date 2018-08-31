@@ -93,8 +93,30 @@ function window_feat(config) {
 window_feat.prototype = {
     gen_conf: null,
     config: null,
-    win_id: -1,
+    win_id: chrome.windows.WINDOW_ID_NONE,
+    tab_idx: -1,
     win_lock: null,
+
+    set: function(win_id, tab_idx)
+    {
+        if (this.win_lock.lock()) {
+            if (this.win_id != -1) {
+                console.log("WARNING: win_id not empty during set");
+            }
+            this.win_id = win_id;
+            this.tab_idx = tab_idx;
+            this.win_lock.unlock();
+        }
+    },
+
+    reset: function()
+    {
+        if (this.win_lock.lock()) {
+            this.win_id = chrome.windows.WINDOW_ID_NONE;
+            this.tab_idx = -1;
+            this.win_lock.unlock();
+        }
+    },
 
     open: function() {
         var _this = this;
@@ -103,39 +125,25 @@ window_feat.prototype = {
 
         if (this.win_lock.lock()) {
             console.log("WIN HANDLE: " + this.win_id);
-            if (this.win_id == -1) {
-                this.win_lock.delayed_unlock();
-
+            if (this.win_id == chrome.windows.WINDOW_ID_NONE) {
                 var app_url = "http" + (this.gen_conf.is_secure ? "s" : "") +
                 "://" + this.gen_conf.server_url +
-                this.config.page;
-                chrome.windows.create(
-                    {'url': [app_url], 'width': 800, 'height': 1200},
-                    function window_create_cb(win) {
-                        _this.win_id = win.id;
-                        _this.on_removed = function window_on_removed_cb(win_id) {
-                            console.log("onRemoved");
-                            console.log(_this.win_id);
-                            console.log(win_id);
-                            _this.win_lock.lock()
-                            if (_this.win_id == win_id) {
-                                console.log("onRemoved: reset window.id");
-                                _this.win_id = -1;
-                                chrome.windows.onRemoved.removeListener(
-                                    _this.on_removed);
-                            }
-                            _this.win_lock.unlock()
-                        };
-                        chrome.windows.onRemoved.addListener(_this.on_removed);
-                        _this.win_lock.unlock();
-                    });
+                    this.config.page;
+                try {
+                    chrome.windows.create(
+                        {'url': [app_url], 'width': 800, 'height': 1200});
+                } catch(e) {
+                    console.log(e);
+                }
             }
             else {
                 chrome.windows.update(this.win_id, {focused: true});
+                chrome.tabs.highlight({windowId: this.win_id,
+                                       tabs: [this.tab_idx]})
                 // TODO put on top
                 console.log('PUT ON TOP HERE');
-                this.win_lock.unlock();
             }
+            this.win_lock.unlock();
         }
         else {
             console.log('WIN LOCK ENABLED, TRY LATER');

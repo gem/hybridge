@@ -373,6 +373,10 @@ function main(opts)
             var app = config.apps[port.name];
             var _this = hybridge;
 
+            chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+                app.window.set(tabs[0].windowId, tabs[0].index);
+            });
+
             var appstatus = _this.ws_appstatus_cbs[port.name];
             if (appstatus != undefined) {
                 appstatus(true);
@@ -395,6 +399,7 @@ function main(opts)
                 if (appstatus != undefined) {
                     appstatus(false);
                 }
+                app.window.reset();
                 app.port = null;
             });
         }
