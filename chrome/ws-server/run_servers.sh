@@ -1,7 +1,12 @@
 #!/bin/bash
+if [ "$1" = "-a" -o "$1" = "--all" ]; then
+    ALL_SERVERS=true
+fi
 how_to_quit ()
 {
-    # kill $s_pid $a_pid
+    if [ "$ALL_SERVERS" ]; then
+        kill $s_pid
+    fi
     kill $a_pid
     exit 0
 }
@@ -10,8 +15,10 @@ trap how_to_quit INT
 
 a=""
 while [ "$a" != "q" ]; do
-    # ./ws_server.py --server &
-    # s_pid=$!
+    if [ "$ALL_SERVERS" ]; then
+        ./ws_server.py --server &
+        s_pid=$!
+    fi
     ./ws_server.py --application &
     a_pid=$!
     a=""
@@ -19,7 +26,9 @@ while [ "$a" != "q" ]; do
     while [ "$a" = "" ]; do
         read a
     done
-    # kill $s_pid $a_pid
+    if [ "$ALL_SERVERS" ]; then
+        kill $s_pid
+    fi
     kill $a_pid
     sleep 1
 done
