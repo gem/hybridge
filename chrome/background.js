@@ -222,13 +222,14 @@ HyBridge.prototype = {
     apps: {},
     router: null,
     routes: {'web': {'hybridge_track_status': {'to': 'bridge'}},
-             'ext': {},
+             'ext': {'hybridge_apptrack_status': {'to': 'bridge'}},
              'bridge': {}
             },
     ws_url: "",
     ws: null,
     ws_is_connect: false,
     ws_status_cbs: {},
+    ws_appstatus_cbs: {},
     watchdog_handle: null,
 
     is_connected: function() {
@@ -260,6 +261,7 @@ HyBridge.prototype = {
                         var ws_status_cb = _this.ws_status_cbs[key];
                         ws_status_cb(false);
                     }
+                    _this.ws_appstatus_cbs = {};
                 }
             });
             this.ws.addEventListener('error', function (event) {
@@ -312,6 +314,20 @@ HyBridge.prototype = {
         };
         track_status_cb(this.ws_is_connect);
     },
+    hybridge_apptrack_status: function (hyb_msg) {
+        var _this = this;
+        console.log("APPTRACK_STATUS: from hybridge");
+        function track_appstatus_cb(is_conn) {
+            _this.router.add_reply('bridge', hyb_msg.app, hyb_msg.msg,
+                                   {'success': is_conn, 'complete': false});
+        }
+        this.ws_appstatus_cbs[hyb_msg.app] = track_appstatus_cb;
+
+        var app = this.apps[hyb_msg.app];
+
+        var is_conn = app.port != null;
+        track_appstatus_cb(is_conn);
+    },
     run: function () {
         var _this = this;
         this.ws_connect();
@@ -357,6 +373,11 @@ function main(opts)
             var app = config.apps[port.name];
             var _this = hybridge;
 
+            var appstatus = _this.ws_appstatus_cbs[port.name];
+            if (appstatus != undefined) {
+                appstatus(true);
+            }
+
             app.port = port;
             app.port.onMessage.addListener(
                 function(api_msg) {
@@ -370,6 +391,11 @@ function main(opts)
                     cb(cb_idx);
                 }
                 app.port_close_cbs = {};
+                var appstatus = _this.ws_appstatus_cbs[app.port.name];
+                if (appstatus != undefined) {
+                    appstatus(false);
+                }
+                app.port = null;
             });
         }
     });

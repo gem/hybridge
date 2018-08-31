@@ -33,7 +33,13 @@ window.onload = function() {
             console.log("Fire a command to command page");
         }
     );
-
+    document.getElementById("ipt_track").addEventListener(
+        "click",
+        function() {
+            run_command('ipt', 'hybridge_apptrack_status');
+            console.log("Fire a command to command page");
+        }
+    );
     document.getElementById("ipt_send").addEventListener(
         "click",
         function() {
@@ -49,6 +55,13 @@ window.onload = function() {
             console.log("Fire a command to command page");
         }
     );
+    document.getElementById("taxtweb_track").addEventListener(
+        "click",
+        function() {
+            run_command('taxtweb', 'hybridge_apptrack_status');
+            console.log("Fire a command to command page");
+        }
+    );
     document.getElementById("taxtweb_send").addEventListener(
         "click",
         function() {
@@ -61,6 +74,13 @@ window.onload = function() {
         "click",
         function() {
             run_command('taxonomy', 'window_open');
+            console.log("Fire a command to command page");
+        }
+    );
+    document.getElementById("taxonomy_track").addEventListener(
+        "click",
+        function() {
+            run_command('taxonomy', 'hybridge_apptrack_status');
             console.log("Fire a command to command page");
         }
     );

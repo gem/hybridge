@@ -45,6 +45,7 @@ ipt.prototype = {
     hybridge: null,
     name: null,
     port: null,
+    port_open_cbs: {},
     port_close_cbs: {},
     // TODO: symbolic routing: key: *, 'to' as 'other'
     routes: {'ext': {'window_open': {'to': 'bridge'},
@@ -87,6 +88,7 @@ apptest.prototype = {
     hybridge: null,
     name: null,
     port: null,
+    port_open_cbs: {},
     port_close_cbs: {},
     // TODO: symbolic routing: key: *, 'to' as 'other'
     routes: {'ext': {'window_open': {'to': 'bridge'},
@@ -123,6 +125,7 @@ taxtweb.prototype = {
     hybridge: null,
     name: null,
     port: null,
+    port_open_cbs: {},
     port_close_cbs: {},
     // TODO: symbolic routing: key: *, 'to' as 'other'
     routes: {'ext': {'window_open': {'to': 'bridge'},
@@ -152,6 +155,7 @@ taxonomy.prototype = {
     hybridge: null,
     name: null,
     port: null,
+    port_open_cbs: {},
     port_close_cbs: {},
     // TODO: symbolic routing: key: *, 'to' as 'other'
     routes: {'ext': {'window_open': {'to': 'bridge'},
