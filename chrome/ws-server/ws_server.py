@@ -188,15 +188,21 @@ class CommandPage(tornado.web.RequestHandler):
         if 'app' not in self.request.arguments:
             return False
 
-        app_name = self.request.arguments['app'][0]
+        app_name = self.get_argument('app')
+        print(apps)
         app = apps[app_name]
 
         if 'command' in self.request.arguments:
-            command = self.request.arguments['command'][0]
+            command = self.get_argument('command')
         if 'arg' in self.request.arguments:
-            args = self.request.arguments['arg']
+            args = self.get_arguments('arg')
 
-        uuid = uuid4().get_urn()[9:]
+        uuid_obj = uuid4()
+        if hasattr(uuid_obj, 'urn'):
+            uuid = uuid_obj.urn[9:]
+        else:
+            uuid = uuid_obj.get_urn()[9:]
+
         hyb_msg = {
             'app': app.name, 'msg': {
                 'uuid': uuid, 'msg': {
