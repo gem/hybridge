@@ -97,10 +97,14 @@ window_feat.prototype = {
     tab_idx: -1,
     win_lock: null,
 
+    is_set: function()
+    {
+        return(this.win_id != chrome.windows.WINDOW_ID_NONE);
+    },
     set: function(win_id, tab_idx)
     {
         if (this.win_lock.lock()) {
-            if (this.win_id != -1) {
+            if (this.is_set()) {
                 console.log("WARNING: win_id not empty during set");
             }
             this.win_id = win_id;

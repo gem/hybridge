@@ -373,6 +373,15 @@ function main(opts)
             var app = config.apps[port.name];
             var _this = hybridge;
 
+            if (app.window.is_set()) {
+                port.postMessage(
+                    {uuid: 'xxxxxxxxx',
+                     msg: {command: 'conn_status',
+                           args: [false, 'another instance is already active. Click related button on your standalone application to raise it.']
+                          }});
+                port.disconnect();
+                return;
+            }
             chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
                 app.window.set(tabs[0].windowId, tabs[0].index);
             });

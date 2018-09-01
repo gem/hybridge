@@ -79,6 +79,12 @@ AppWeb.prototype = {
         this.hybridge = hybridge;
     },
 
+    conn_status: function (success, reason) {
+        if (!success) {
+            alert(reason);
+        }
+    },
+
     /* this function is called when a malformed message is received */
     on_notstd_msg_cb: function(msg) {
         console.log("client ipt received:");
