@@ -94,6 +94,7 @@ window_feat.prototype = {
     gen_conf: null,
     config: null,
     win_id: chrome.windows.WINDOW_ID_NONE,
+    tab_id: chrome.tabs.TAB_ID_NONE,
     tab_idx: -1,
     win_lock: null,
 
@@ -101,16 +102,39 @@ window_feat.prototype = {
     {
         return(this.win_id != chrome.windows.WINDOW_ID_NONE);
     },
-    set: function(win_id, tab_idx)
+
+    _update: function(win_id, tab_id, tab_idx)
+    {
+        this.win_id = win_id;
+        this.tab_id = tab_id;
+        this.tab_idx = tab_idx;
+    },
+
+    update: function(win_id, tab_id, tab_idx)
+    {
+        if (this.win_lock.lock()) {
+            this._update(win_id, tab_id, tab_idx);
+            this.win_lock.unlock();
+        }
+    },
+
+    set: function(win_id, tab_id, tab_idx)
     {
         if (this.win_lock.lock()) {
             if (this.is_set()) {
                 console.log("WARNING: win_id not empty during set");
             }
-            this.win_id = win_id;
-            this.tab_idx = tab_idx;
+            this._update(win_id, tab_id, tab_idx);
             this.win_lock.unlock();
         }
+    },
+
+    get_tab_id()
+    {
+        if (this.win_id == chrome.windows.WINDOW_ID_NONE) {
+            return chrome.tabs.TAB_ID_NONE;
+        }
+        return this.tab_id;
     },
 
     reset: function()

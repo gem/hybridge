@@ -344,6 +344,21 @@ function main(opts)
     config = config_apps(opts);
 
     hybridge = new HyBridge(config);
+
+    function onattached_cb(tab_id, info) {
+        var app;
+
+        for (var key in hybridge.apps) {
+            app = hybridge.apps[key];
+
+            if (app.window.get_tab_id() == tab_id) {
+                app.window.update(info.newWindowId, tab_id, info.newPosition);
+                return;
+            }
+        }
+    }
+    chrome.tabs.onAttached.addListener(onattached_cb);
+
     hybridge.run()
 
     chrome.webRequest.onBeforeSendHeaders.addListener(
@@ -383,7 +398,7 @@ function main(opts)
                 return;
             }
             chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
-                app.window.set(tabs[0].windowId, tabs[0].index);
+                app.window.set(tabs[0].windowId, tabs[0].id, tabs[0].index);
             });
 
             var appstatus = _this.ws_appstatus_cbs[port.name];
