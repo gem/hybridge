@@ -138,19 +138,25 @@ window.onload = function window_onload() {
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
-        var cmd = {'command': 'select_and_copy_files_to_ipt_dir', 'args': []};
+        var cmd = {'command': 'select_and_copy_file_to_ipt_dir', 'args': [false, 'Test file chooser title']};
         var ret = app_web.send(cmd, custom_on_cmd_cb);
         custom_on_cmd_cb(ret, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
-        var cmd = {'command': 'select_file', 'args': []};
+        var cmd = {'command': 'select_and_copy_file_to_ipt_dir', 'args': [true]};
         var ret = app_web.send(cmd, custom_on_cmd_cb);
         custom_on_cmd_cb(ret, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
-        var cmd = {'command': 'select_files', 'args': []};
+        var cmd = {'command': 'select_file', 'args': [false]};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
+    setTimeout(function(){
+        var cmd = {'command': 'select_file', 'args': [true, 'Test title for select_file call']};
         var ret = app_web.send(cmd, custom_on_cmd_cb);
         custom_on_cmd_cb(ret, cmd);
     }, time_cur);
