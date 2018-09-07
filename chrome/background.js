@@ -265,6 +265,14 @@ HyBridge.prototype = {
             console.log('WS connection failed: '+ err.message);
         }
     },
+    ws_disconnect: function ()
+    {
+        if (this.ws != null) {
+            this.ws.close();
+            this.ws = null;
+            this.ws_is_connect = false;
+        }
+    },
     ws_send: function (app_name, api_msg) { // [, frm] NOTE: maybe not required, currently not used
         if (this.ws == null) {
             console.log('local app not connected');
@@ -305,6 +313,16 @@ HyBridge.prototype = {
 
         // run watchdog
         this.watchdog_handle = setInterval(function wd_func(obj) { obj.watchdog(); }, 1000, _this);
+    },
+
+    is_running: function () {
+        return (this.watchdog_handle != null);
+    },
+
+    halt: function () {
+        clearInterval(this.watchdog_handle);
+        this.watchdog_handle = null;
+        this.ws_disconnect();
     }
 }
 
@@ -343,6 +361,34 @@ function main()
                 }
                 app.port_close_cbs = {};
             });
+        }
+    });
+
+    chrome.browserAction.onClicked.addListener(function(e) {
+        if (hybridge == null)
+            return;
+
+        if (hybridge.is_running()) {
+            hybridge.halt();
+            chrome.browserAction.setIcon({path: {
+                "16": "icons/icon_halt16.png",
+                "32": "icons/icon_halt32.png",
+                "48": "icons/icon_halt48.png",
+                "128": "icons/icon_halt128.png"
+            }});
+            chrome.browserAction.setTitle({title: "HyBridge extension (paused)."});
+            console.log("Hybridge Halted");
+        }
+        else {
+            hybridge.run();
+            chrome.browserAction.setIcon({path: {
+                "16": "icons/icon16.png",
+                "32": "icons/icon32.png",
+                "48": "icons/icon48.png",
+                "128": "icons/icon128.png"
+            }});
+            chrome.browserAction.setTitle({title: "HyBridge extension."});
+            console.log("HyBridge Started");
         }
     });
 }
