@@ -6,7 +6,6 @@
 
     "description": "Generic application-browser bridge interface.",
 
-    "options_page": "options.html",
     "browser_action": {
         "default_icon": {
             "16": "icons/icon16.png",
@@ -14,16 +13,16 @@
             "48": "icons/icon48.png",
             "128": "icons/icon128.png"
         },
-        "default_title": "OpenQuake HyBridge Extension"
+        "default_title": "HyBridge extension"
     },
     "background": {
-        "scripts": ["options_defaults.js", "background_commons.js",
-                    "background_apps.js", "background.js"],
+        "scripts": ["background_commons.js", "background_apps.js",
+                    "background.js"],
         "persistent": true
     },
     "content_scripts": [
         {
-            "matches": ["*://localhost/*"], // URL FILTERS
+            "matches": ["*://localhost/*"],
             "js": ["content.js"]
         }
     ],
@@ -31,10 +30,6 @@
         "matches": ["*://localhost/*"]
     },
     "permissions": [
-        "*://localhost/*", // URL FILTERS
-        "storage",
-        "activeTab",
-        "webRequest",
-        "webRequestBlocking"
+        "activeTab"
     ]
 }
