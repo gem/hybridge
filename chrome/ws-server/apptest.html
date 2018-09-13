@@ -57,15 +57,15 @@ window.onload = function window_onload() {
         function() {
             console.log('send msg');
             var arg = document.getElementById("to-hybridge-txt").value;
-            var uuid = app_web.send({'command': 'ext_app_open', 'args': [arg]},
+            var uu = app_web.send({'command': 'ext_app_open', 'args': [arg]},
                                   on_cmd_cb);
-            console.log("FIRED CMD WITH UUID: " + uuid);
+            console.log("FIRED CMD WITH UUID: " + uu);
         }
     );
-    function custom_on_cmd_cb(uuid, msg) {
+    function custom_on_cmd_cb(uu, msg) {
         var content = document.getElementById("results");
         content.innerHTML += '<br>';
-        content.innerHTML += uuid;
+        content.innerHTML += uu;
         content.innerHTML += ': &nbsp';
         content.innerHTML += JSON.stringify(msg);
         console.log(msg);
@@ -74,40 +74,40 @@ window.onload = function window_onload() {
     var time_delta = 500;
     setTimeout(function(){
         var cmd = {'command': 'ext_app_open', 'args': ['Testing']};
-        var uuid = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(uuid, cmd);
+        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uu, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
         var cmd = {'command': 'notify_click', 'args': []};
-        var uuid = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(uuid, cmd);
+        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uu, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
         var cmd = {'command': 'info', 'args': ['Testing info message']};
-        var uuid = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(uuid, cmd);
+        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uu, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
         var cmd = {'command': 'warning', 'args': ['Testing warning message']};
-        var uuid = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(uuid, cmd);
+        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uu, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
         var cmd = {'command': 'error', 'args': ['Testing error message']};
-        var uuid = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(uuid, cmd);
+        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uu, cmd);
     }, time_cur);
     time_cur += time_delta;
 
     <!-- The following should not be allowed, because it's ipt-specific -->
     setTimeout(function(){
         var cmd = {'command': 'ls_ipt_dir', 'args': []};
-        var uuid = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(uuid, cmd);
+        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uu, cmd);
     }, time_cur);
     time_cur += time_delta;
 }
