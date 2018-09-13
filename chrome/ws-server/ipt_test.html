@@ -5,6 +5,7 @@
   <script src="hybridge_key.js"></script>
   <script src="hybridge.js"></script>
   <script src="app_web.js"></script>
+  <script src="utils.js"></script>
   <style>
     .tab {
     border-collapse: collapse;
@@ -62,136 +63,228 @@ window.onload = function window_onload() {
             console.log("FIRED CMD WITH UUID: " + uu);
         }
     );
-    function custom_on_cmd_cb(uu, msg) {
-        var content = document.getElementById("results");
-        content.innerHTML += '<br>';
-        content.innerHTML += uu;
-        content.innerHTML += ': &nbsp';
-        content.innerHTML += JSON.stringify(msg);
-        console.log(msg);
-    }
     var time_cur = 0;
     var time_delta = 500;
+
     setTimeout(function(){
+        var expected = {"content":null,"reason":"ok","ret":0};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
         var cmd = {'command': 'ext_app_open', 'args': ['Testing']};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
+
     time_cur += time_delta;
     setTimeout(function(){
+        var expected = {"content":null,"reason":"ok","success":true};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
         var cmd = {'command': 'clear_ipt_dir', 'args': []};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
+
     time_cur += time_delta;
     setTimeout(function(){
+        var expected = {"content":true,"reason":"ok","success":true};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
         var cmd = {'command': 'on_same_fs', 'args': []};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
+
     time_cur += time_delta;
     setTimeout(function(){
+        var expected = {"content":null,"reason":"[Errno 2] No such file or directory: '/home/paolo/.gem/irmt/ipt/ScenarioHazard.zip'","success":false};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
         var cmd = {'command': 'run_oq_engine_calc', 'args': [['ScenarioHazard.zip']]};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
+
     time_cur += time_delta;
     setTimeout(function(){
+        var expected = {"content":null,"reason":"ok","success":true};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
         var cmd = {'command': 'save_str_to_file', 'args': ['this is the content', 'test.txt']};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
+
     time_cur += time_delta;
     setTimeout(function(){
+        var expected = {"content":"this is the content","reason":"ok","success":true};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
         var cmd = {'command': 'read_file_in_ipt_dir', 'args': ['test.txt']};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
-    setTimeout(function(){
-        var cmd = {'command': 'ls_ipt_dir', 'args': []};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(uu, cmd);
-    }, time_cur);
+
     time_cur += time_delta;
     setTimeout(function(){
+        var expected = {"content":["test.txt"],"reason":"ok","success":true}
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
+        var cmd = {'command': 'ls_ipt_dir', 'args': []};
+        var uu = app_web.send(cmd, check_expected);
+        custom_on_cmd_cb(uu, cmd);
+    }, time_cur);
+
+    time_cur += time_delta;
+    setTimeout(function(){
+        var expected = {"content":null,"reason":"ok","success":true};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
         var cmd = {'command': 'rename_file_in_ipt_dir', 'args': ['test.txt', 'test_renamed.txt']};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
+    
     time_cur += time_delta;
     setTimeout(function(){
+        var expected = {"content":["test_renamed.txt"],"reason":"ok","success":true};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
         var cmd = {'command': 'ls_ipt_dir', 'args': []};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
+
     time_cur += time_delta;
     setTimeout(function(){
+        var expected = {"content":null,"reason":"ok","success":true};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
         var cmd = {'command': 'rm_file_from_ipt_dir', 'args': ['test_renamed.txt']};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
+
     time_cur += time_delta;
     setTimeout(function(){
+        var expected = {"content":[],"reason":"ok","success":true};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
         var cmd = {'command': 'ls_ipt_dir', 'args': []};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
+
     time_cur += time_delta;
     setTimeout(function(){
+        var expected = {"content":null,"reason":"No file was selected","success":false};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
         var cmd = {'command': 'select_and_copy_file_to_ipt_dir', 'args': [false, 'Test file chooser title']};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
+
     time_cur += time_delta;
     setTimeout(function(){
+        var expected = {"content":null,"reason":"No file was selected","success":false}
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
         var cmd = {'command': 'select_and_copy_file_to_ipt_dir', 'args': [true]};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
+
     time_cur += time_delta;
     setTimeout(function(){
+        var expected = {"content":[""],"reason":"ok","success":true};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
         var cmd = {'command': 'select_file', 'args': [false]};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
+
     time_cur += time_delta;
     setTimeout(function(){
+        var expected = {"content":[],"reason":"ok","success":true};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
         var cmd = {'command': 'select_file', 'args': [true, 'Test title for select_file call']};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
+
     time_cur += time_delta;
     setTimeout(function(){
+        var expected = {"content":null,"reason":"ok","success":true};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
         var cmd = {'command': 'mkdir_in_ipt_dir', 'args': ['test1/test2']};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
+
     time_cur += time_delta;
     setTimeout(function(){
+        var expected = {"content":null,"reason":"Unable to create the directory ../test3","success":false};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
         // this kind of attempt is supposed to be refused
         var cmd = {'command': 'mkdir_in_ipt_dir', 'args': ['../test3']};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
+
     time_cur += time_delta;
     setTimeout(function(){
+        var expected = {"content":["test1"],"reason":"ok","success":true};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
         var cmd = {'command': 'ls_ipt_dir', 'args': []};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
+
     time_cur += time_delta;
     setTimeout(function(){
+        var expected = {"content":null,"reason":"ok","success":true};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
         var cmd = {'command': 'rmdir_from_ipt_dir', 'args': ['test1']};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
+
     time_cur += time_delta;
     setTimeout(function(){
+        var expected = {"content":[],"reason":"ok","success":true};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
         var cmd = {'command': 'ls_ipt_dir', 'args': []};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
-    time_cur += time_delta;
 }
   </script>
 </html>

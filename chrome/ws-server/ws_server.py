@@ -31,6 +31,7 @@ apptest_content = open('apptest.html').read()
 hybridge_key_js = open('hybridge_key.js').read()
 hybridge_js = open('hybridge.js').read()
 app_web_js = open('app_web.js').read()
+utils_js = open('utils.js').read()
 
 apps = {}
 
@@ -155,6 +156,11 @@ class ExtApp:
 class AppWebJS(tornado.web.RequestHandler):
     def get(self):
         self.write(app_web_js)
+
+
+class UtilsJS(tornado.web.RequestHandler):
+    def get(self):
+        self.write(utils_js)
 
 
 class HyBridgeJS(tornado.web.RequestHandler):
@@ -303,6 +309,7 @@ if __name__ == "__main__":
             (r'/ipt_test/hybridge.js', HyBridgeJS),
             (r'/ipt_test/uuid-random.min.js', UuidJS),
             (r'/ipt_test/app_web.js', AppWebJS),
+            (r'/ipt_test/utils.js', UtilsJS),
 
             (r'/taxtweb/', TaxtwebPage),
             (r'/taxtweb/uuid-random.min.js', UuidJS),
@@ -317,6 +324,7 @@ if __name__ == "__main__":
             (r'/taxtweb_test/hybridge.js', HyBridgeJS),
             (r'/taxtweb_test/uuid-random.min.js', UuidJS),
             (r'/taxtweb_test/app_web.js', AppWebJS),
+            (r'/taxtweb_test/utils.js', UtilsJS),
 
             (r'/taxonomy/', TaxonomyPage),
             (r'/taxonomy/uuid-random.min.js', UuidJS),
@@ -331,6 +339,7 @@ if __name__ == "__main__":
             (r'/taxonomy_test/hybridge.js', HyBridgeJS),
             (r'/taxonomy_test/uuid-random.min.js', UuidJS),
             (r'/taxonomy_test/app_web.js', AppWebJS),
+            (r'/taxonomy_test/utils.js', UtilsJS),
 
             (r'/apptest/', AppTestPage),
             (r'/apptest/uuid-random.min.js', UuidJS),
@@ -338,6 +347,7 @@ if __name__ == "__main__":
             (r'/apptest/hybridge.js', HyBridgeJS),
             (r'/apptest/uuid-random.min.js', UuidJS),
             (r'/apptest/app_web.js', AppWebJS),
+            (r'/apptest/utils.js', UtilsJS),
 
             (r'/index.js', HomeJS),
             (r'/', HomePage),

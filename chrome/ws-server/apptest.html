@@ -5,6 +5,7 @@
   <script src="hybridge_key.js"></script>
   <script src="hybridge.js"></script>
   <script src="app_web.js"></script>
+  <script src="utils.js"></script>
   <style>
     .tab {
     border-collapse: collapse;
@@ -51,6 +52,7 @@ var app_web;
 
 window.onload = function window_onload() {
     app_web = new AppWeb('apptest');
+    var num_errors = 0;
 
     document.getElementById("to-hybridge-btn").addEventListener(
         "click",
@@ -62,54 +64,75 @@ window.onload = function window_onload() {
             console.log("FIRED CMD WITH UUID: " + uu);
         }
     );
-    function custom_on_cmd_cb(uu, msg) {
-        var content = document.getElementById("results");
-        content.innerHTML += '<br>';
-        content.innerHTML += uu;
-        content.innerHTML += ': &nbsp';
-        content.innerHTML += JSON.stringify(msg);
-        console.log(msg);
-    }
+
     var time_cur = 0;
     var time_delta = 500;
-    setTimeout(function(){
-        var cmd = {'command': 'ext_app_open', 'args': ['Testing']};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(uu, cmd);
-    }, time_cur);
-    time_cur += time_delta;
-    setTimeout(function(){
-        var cmd = {'command': 'notify_click', 'args': []};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(uu, cmd);
-    }, time_cur);
-    time_cur += time_delta;
-    setTimeout(function(){
-        var cmd = {'command': 'info', 'args': ['Testing info message']};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(uu, cmd);
-    }, time_cur);
-    time_cur += time_delta;
-    setTimeout(function(){
-        var cmd = {'command': 'warning', 'args': ['Testing warning message']};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(uu, cmd);
-    }, time_cur);
-    time_cur += time_delta;
-    setTimeout(function(){
-        var cmd = {'command': 'error', 'args': ['Testing error message']};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(uu, cmd);
-    }, time_cur);
-    time_cur += time_delta;
 
-    <!-- The following should not be allowed, because it's ipt-specific -->
     setTimeout(function(){
-        var cmd = {'command': 'ls_ipt_dir', 'args': []};
-        var uu = app_web.send(cmd, custom_on_cmd_cb);
+        var expected = {"content":null,"reason":"ok","ret":0};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
+        var cmd = {'command': 'ext_app_open', 'args': ['Testing']};
+        var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
+
     time_cur += time_delta;
+    setTimeout(function(){
+        var expected = {"content":null,"reason":"ok","ret":0};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
+        var cmd = {'command': 'notify_click', 'args': []};
+        var uu = app_web.send(cmd, check_expected);
+        custom_on_cmd_cb(uu, cmd);
+    }, time_cur);
+
+    time_cur += time_delta;
+    setTimeout(function(){
+        var expected = {"content":null,"reason":"ok","ret":0};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
+        var cmd = {'command': 'info', 'args': ['Testing info message']};
+        var uu = app_web.send(cmd, check_expected);
+        custom_on_cmd_cb(uu, cmd);
+    }, time_cur);
+
+    time_cur += time_delta;
+    setTimeout(function(){
+        var expected = {"content":null,"reason":"ok","ret":0};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
+        var cmd = {'command': 'warning', 'args': ['Testing warning message']};
+        var uu = app_web.send(cmd, check_expected);
+        custom_on_cmd_cb(uu, cmd);
+    }, time_cur);
+
+    time_cur += time_delta;
+    setTimeout(function(){
+        var expected = {"content":null,"reason":"ok","ret":0};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
+        var cmd = {'command': 'error', 'args': ['Testing error message']};
+        var uu = app_web.send(cmd, check_expected);
+        custom_on_cmd_cb(uu, cmd);
+    }, time_cur);
+
+    time_cur += time_delta;
+    // The following should not be allowed, because it's ipt-specific
+    setTimeout(function(){
+        var expected = {}
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
+        var cmd = {'command': 'ls_ipt_dir', 'args': []};
+        var uu = app_web.send(cmd, check_expected);
+        custom_on_cmd_cb(uu, cmd);
+    }, time_cur);
 }
-  </script>
+</script>
 </html>
