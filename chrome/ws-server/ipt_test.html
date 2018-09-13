@@ -161,6 +161,37 @@ window.onload = function window_onload() {
         custom_on_cmd_cb(ret, cmd);
     }, time_cur);
     time_cur += time_delta;
+    setTimeout(function(){
+        var cmd = {'command': 'mkdir_in_ipt_dir', 'args': ['test1/test2']};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
+    setTimeout(function(){
+        // this kind of attempt is supposed to be refused
+        var cmd = {'command': 'mkdir_in_ipt_dir', 'args': ['../test3']};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
+    setTimeout(function(){
+        var cmd = {'command': 'ls_ipt_dir', 'args': []};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
+    setTimeout(function(){
+        var cmd = {'command': 'rmdir_from_ipt_dir', 'args': ['test1']};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
+    setTimeout(function(){
+        var cmd = {'command': 'ls_ipt_dir', 'args': []};
+        var ret = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(ret, cmd);
+    }, time_cur);
+    time_cur += time_delta;
 }
   </script>
 </html>
