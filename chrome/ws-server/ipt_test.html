@@ -57,15 +57,15 @@ window.onload = function window_onload() {
         function() {
             console.log('send msg');
             var arg = document.getElementById("to-hybridge-txt").value;
-            var uu = app_web.send({'command': 'ext_app_open', 'args': [arg]},
+            var uuid = app_web.send({'command': 'ext_app_open', 'args': [arg]},
                                   on_cmd_cb);
-            console.log("FIRED CMD WITH UUID: " + uu);
+            console.log("FIRED CMD WITH UUID: " + uuid);
         }
     );
-    function custom_on_cmd_cb(uu, msg) {
+    function custom_on_cmd_cb(uuid, msg) {
         var content = document.getElementById("results");
         content.innerHTML += '<br>';
-        content.innerHTML += uu;
+        content.innerHTML += uuid;
         content.innerHTML += ': &nbsp';
         content.innerHTML += JSON.stringify(msg);
         console.log(msg);
@@ -74,122 +74,122 @@ window.onload = function window_onload() {
     var time_delta = 500;
     setTimeout(function(){
         var cmd = {'command': 'ext_app_open', 'args': ['Testing']};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
+        var uuid = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uuid, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
         var cmd = {'command': 'clear_ipt_dir', 'args': []};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
+        var uuid = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uuid, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
         var cmd = {'command': 'on_same_fs', 'args': []};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
+        var uuid = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uuid, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
         var cmd = {'command': 'run_oq_engine_calc', 'args': [['ScenarioHazard.zip']]};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
+        var uuid = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uuid, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
         var cmd = {'command': 'save_str_to_file', 'args': ['this is the content', 'test.txt']};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
+        var uuid = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uuid, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
         var cmd = {'command': 'read_file_in_ipt_dir', 'args': ['test.txt']};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
+        var uuid = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uuid, cmd);
     }, time_cur);
     setTimeout(function(){
         var cmd = {'command': 'ls_ipt_dir', 'args': []};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
+        var uuid = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uuid, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
         var cmd = {'command': 'rename_file_in_ipt_dir', 'args': ['test.txt', 'test_renamed.txt']};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
+        var uuid = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uuid, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
         var cmd = {'command': 'ls_ipt_dir', 'args': []};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
+        var uuid = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uuid, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
         var cmd = {'command': 'rm_file_from_ipt_dir', 'args': ['test_renamed.txt']};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
+        var uuid = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uuid, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
         var cmd = {'command': 'ls_ipt_dir', 'args': []};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
+        var uuid = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uuid, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
         var cmd = {'command': 'select_and_copy_file_to_ipt_dir', 'args': [false, 'Test file chooser title']};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
+        var uuid = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uuid, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
         var cmd = {'command': 'select_and_copy_file_to_ipt_dir', 'args': [true]};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
+        var uuid = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uuid, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
         var cmd = {'command': 'select_file', 'args': [false]};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
+        var uuid = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uuid, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
         var cmd = {'command': 'select_file', 'args': [true, 'Test title for select_file call']};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
+        var uuid = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uuid, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
         var cmd = {'command': 'mkdir_in_ipt_dir', 'args': ['test1/test2']};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
+        var uuid = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uuid, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
         // this kind of attempt is supposed to be refused
         var cmd = {'command': 'mkdir_in_ipt_dir', 'args': ['../test3']};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
+        var uuid = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uuid, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
         var cmd = {'command': 'ls_ipt_dir', 'args': []};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
+        var uuid = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uuid, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
         var cmd = {'command': 'rmdir_from_ipt_dir', 'args': ['test1']};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
+        var uuid = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uuid, cmd);
     }, time_cur);
     time_cur += time_delta;
     setTimeout(function(){
         var cmd = {'command': 'ls_ipt_dir', 'args': []};
-        var ret = app_web.send(cmd, custom_on_cmd_cb);
-        custom_on_cmd_cb(ret, cmd);
+        var uuid = app_web.send(cmd, custom_on_cmd_cb);
+        custom_on_cmd_cb(uuid, cmd);
     }, time_cur);
     time_cur += time_delta;
 }

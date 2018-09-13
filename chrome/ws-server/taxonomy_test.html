@@ -55,9 +55,9 @@ window.onload = function window_onload() {
         function() {
             console.log('send msg');
             var arg = document.getElementById("to-hybridge-txt").value;
-            var uu = app_web.send({'command': 'ext_app_open', 'args': [arg]},
+            var uuid = app_web.send({'command': 'ext_app_open', 'args': [arg]},
                                   on_cmd_cb);
-            console.log("FIRED CMD WITH UUID: " + uu);
+            console.log("FIRED CMD WITH UUID: " + uuid);
         }
     );
 }
