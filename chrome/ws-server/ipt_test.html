@@ -255,11 +255,44 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
+        var expected = {"content":null,"reason":"ok","success":true};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
+        var cmd = {'command': 'save_str_to_file', 'args': ['this is the content', 'test.txt', 'test1/test2']};
+        var uu = app_web.send(cmd, check_expected);
+        custom_on_cmd_cb(uu, cmd);
+    }, time_cur);
+
+    time_cur += time_delta;
+    setTimeout(function(){
         var expected = {"content":["test1"],"reason":"ok","success":true};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
         var cmd = {'command': 'ls_ipt_dir', 'args': []};
+        var uu = app_web.send(cmd, check_expected);
+        custom_on_cmd_cb(uu, cmd);
+    }, time_cur);
+
+    time_cur += time_delta;
+    setTimeout(function(){
+        var expected = {"content":["test2"],"reason":"ok","success":true};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
+        var cmd = {'command': 'ls_ipt_dir', 'args': ['test1']};
+        var uu = app_web.send(cmd, check_expected);
+        custom_on_cmd_cb(uu, cmd);
+    }, time_cur);
+
+    time_cur += time_delta;
+    setTimeout(function(){
+        var expected = {"content":["test.txt"],"reason":"ok","success":true};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
+        var cmd = {'command': 'ls_ipt_dir', 'args': ['test1/test2']};
         var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
