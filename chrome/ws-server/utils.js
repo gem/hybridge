@@ -32,7 +32,6 @@ function custom_on_cmd_cb(uu, msg, expected) {
     content.innerHTML += uu;
     content.innerHTML += ': &nbsp';
     content.innerHTML += JSON.stringify(msg);
-    console.log(msg);
     if (typeof(expected) != 'undefined') {
         console.log(msg);
         console.log(expected);
