@@ -150,7 +150,7 @@ window.onload = function window_onload() {
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
-        var cmd = {'command': 'rename_file', 'args': ['test.txt', 'test_renamed.txt']};
+        var cmd = {'command': 'move_file', 'args': ['test.txt', 'test_renamed.txt']};
         var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
@@ -273,7 +273,7 @@ window.onload = function window_onload() {
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
-        var cmd = {'command': 'save_str_to_file', 'args': ['this is the content', 'test.txt', 'test1/test2']};
+        var cmd = {'command': 'save_str_to_file', 'args': ['this is the content', 'test1/test2/test.txt']};
         var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
