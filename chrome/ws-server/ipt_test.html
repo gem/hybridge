@@ -393,6 +393,20 @@ window.onload = function window_onload() {
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
 
+    time_cur += time_delta;
+    setTimeout(function(){
+        var expected = {"content":"temp/test_archive.zip", "reason":"ok","success":true};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
+        var cmd = {'command': 'build_zip', 'args': [
+            [['file', 'test.txt', 'zipdir1/test.txt'],
+             ['file', 'another_test.txt', 'zipdir2/another_test.txt'],
+             ['string', 'test/../../../string_test.txt', 'this content arrives from a string\nthis is on another line\n']],
+            'test_archive.zip']};
+        var uu = app_web.send(cmd, check_expected);
+        custom_on_cmd_cb(uu, cmd);
+    }, time_cur);
 
 }
   </script>
