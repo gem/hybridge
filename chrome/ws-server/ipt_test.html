@@ -101,8 +101,7 @@ window.onload = function window_onload() {
     time_cur += time_delta;
     setTimeout(function(){
         // FIXME: instead of failing because of the missing zip file, it should run a calculation
-        // FIXME: this would fail for a different user
-        var expected = {"content":null,"reason":"[Errno 2] No such file or directory: '/home/paolo/.gem/irmt/ipt/ScenarioHazard.zip'","success":false};
+        var expected = {"content":null,"reason":"Unable to access the file ScenarioHazard.zip","success":false};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -245,8 +244,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        // FIXME: the check on the expected return value should not consider '/home/paolo'
-        var expected = {"content":null,"reason":"[Errno 17] File exists: '/home/paolo/.gem/irmt/ipt/test1'","success":false};
+        var expected = {"content":null,"reason":"Unable to create the directory 'test1'","success":false};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
