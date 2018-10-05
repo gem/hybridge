@@ -409,6 +409,17 @@ window.onload = function window_onload() {
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
 
+    time_cur += time_delta;
+    setTimeout(function(){
+        var expected = {"content":null, "reason":"ok","success":true};
+        function check_expected(uu, msg) {
+            custom_on_cmd_cb(uu, msg, expected);
+        }
+        var cmd = {'command': 'save_as', 'args': ['temp/test_archive.zip', 'test_archive_copied.zip']};
+        var uu = app_web.send(cmd, check_expected);
+        custom_on_cmd_cb(uu, cmd);
+    }, time_cur);
+
 }
   </script>
 </html>
