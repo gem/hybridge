@@ -38,7 +38,9 @@
 // Ext msg syntax
 // hyb_msg = {'app':<app_name> , 'msg':<api_msg>}
 // api_msg = {'msg'|'reply': <app_msg>, 'uuid':<uuid> }
-// app_msg = {<('command', 'args':[])|('result': <obj|bool>, complete: <True|False>)>}
+// app_msg = {<('command', 'args':[]) |
+//             ('result': <cmd_msg>, complete: <True|False>)>}
+// cmd_msg = <obj|bool>
 
 // Web msg syntax
 // --------------
