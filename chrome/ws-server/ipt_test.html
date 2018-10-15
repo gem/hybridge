@@ -67,7 +67,7 @@ window.onload = function window_onload() {
     var time_delta = 500;
 
     setTimeout(function(){
-        var expected = {"content":null,"reason":"ok","ret":0};
+        var expected = {"complete": true, "result": {"content":null,"reason":"ok","ret":0}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -78,7 +78,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":null,"reason":"ok","success":true};
+        var expected = {"complete": true, "result": {"content":null,"reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -89,7 +89,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":true,"reason":"ok","success":true};
+        var expected = {"complete": true, "result": {"content":true,"reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -101,7 +101,7 @@ window.onload = function window_onload() {
     time_cur += time_delta;
     setTimeout(function(){
         // FIXME: instead of failing because of the missing zip file, it should run a calculation
-        var expected = {"content":null,"reason":"Unable to access the file ScenarioHazard.zip","success":false};
+        var expected = {"complete": true, "result": {"content":null,"reason":"Unable to access the file ScenarioHazard.zip","success":false}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -112,7 +112,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":null,"reason":"ok","success":true};
+        var expected = {"complete": true, "result": {"content":null,"reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -123,7 +123,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":"this is the content","reason":"ok","success":true};
+        var expected = {"complete": true, "result": {"content":"this is the content","reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -134,7 +134,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":["test.txt"],"reason":"ok","success":true}
+        var expected = {"complete": true, "result": {"content":["test.txt"],"reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -145,7 +145,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":null,"reason":"ok","success":true};
+        var expected = {"complete": true, "result": {"content":null,"reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -156,7 +156,7 @@ window.onload = function window_onload() {
     
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":["test_renamed.txt"],"reason":"ok","success":true};
+        var expected = {"complete": true, "result": {"content":["test_renamed.txt"],"reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -167,7 +167,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":null,"reason":"ok","success":true};
+        var expected = {"complete": true, "result": {"content":null,"reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -178,7 +178,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":[],"reason":"ok","success":true};
+        var expected = {"complete": true, "result": {"content":[],"reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -189,7 +189,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":null,"reason":"No file was selected","success":false};
+        var expected = {"complete": true, "result": {"content":null,"reason":"No file was selected","success":false}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -200,7 +200,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":null,"reason":"No file was selected","success":false}
+        var expected = {"complete": true, "result": {"content":null,"reason":"No file was selected","success":false}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -211,7 +211,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":[""],"reason":"ok","success":true};
+        var expected = {"complete": true, "result": {"content":[""],"reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -222,7 +222,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":[],"reason":"ok","success":true};
+        var expected = {"complete": true, "result": {"content":[],"reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -233,7 +233,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":null,"reason":"ok","success":true};
+        var expected = {"complete": true, "result": {"content":null,"reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -244,7 +244,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":null,"reason":"An error occurred. Please see the IRMT log for details.","success":false}
+        var expected = {"complete": true, "result": {"content":null,"reason":"create_dir: an error occurred. Please see the IRMT log for details.","success":false}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -255,7 +255,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":null,"reason":"Unable to create the directory ../test3","success":false};
+        var expected = {"complete": true, "result": {"content":null,"reason":"Unable to create the directory ../test3","success":false}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -267,7 +267,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":null,"reason":"ok","success":true};
+        var expected = {"complete": true, "result": {"content":null,"reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -278,7 +278,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":["test1/"],"reason":"ok","success":true};
+        var expected = {"complete": true, "result": {"content":["test1/"],"reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -289,7 +289,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":["test2/"],"reason":"ok","success":true};
+        var expected = {"complete": true, "result": {"content":["test2/"],"reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -300,7 +300,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":["test.txt"],"reason":"ok","success":true};
+        var expected = {"complete": true, "result": {"content":["test.txt"],"reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -311,7 +311,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":null,"reason":"ok","success":true};
+        var expected = {"complete": true, "result": {"content":null,"reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -322,7 +322,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":[],"reason":"ok","success":true};
+        var expected = {"complete": true, "result": {"content":[],"reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -336,7 +336,7 @@ window.onload = function window_onload() {
     //
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":null,"reason":"ok","success":true};
+        var expected = {"complete": true, "result": {"content":null,"reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -347,7 +347,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":null,"reason":"ok","success":true};
+        var expected = {"complete": true, "result": {"content":null,"reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -358,7 +358,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":null,"reason":"ok","success":true};
+        var expected = {"complete": true, "result": {"content":null,"reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -369,7 +369,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":null,"reason":"ok","success":true};
+        var expected = {"complete": true, "result": {"content":null,"reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -381,7 +381,7 @@ window.onload = function window_onload() {
     // this is supposed to fail, due to .. in the string path
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":null,"reason":"Illegal path test/../../../string_test.txt","success":false}
+        var expected = {"complete": true, "result": {"content":null,"reason":"Illegal path test/../../../string_test.txt","success":false}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -396,7 +396,7 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":"temp/test_archive.zip", "reason":"ok","success":true};
+        var expected = {"complete": true, "result": {"content":"Temp/test_archive.zip", "reason":"ok","success":true}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
@@ -411,11 +411,11 @@ window.onload = function window_onload() {
 
     time_cur += time_delta;
     setTimeout(function(){
-        var expected = {"content":null, "reason":"ok","success":true};
+        var expected = {"complete":true,"result":{"content":null,"reason":"Canceled","success":false}};
         function check_expected(uu, msg) {
             custom_on_cmd_cb(uu, msg, expected);
         }
-        var cmd = {'command': 'save_as', 'args': ['temp/test_archive.zip', 'test_archive_copied.zip']};
+        var cmd = {'command': 'save_as', 'args': ['Temp/test_archive.zip', 'test_archive_copied.zip']};
         var uu = app_web.send(cmd, check_expected);
         custom_on_cmd_cb(uu, cmd);
     }, time_cur);
